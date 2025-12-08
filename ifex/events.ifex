@@ -44,7 +44,7 @@ namespaces:
         members:
           - name: event_id
             datatype: string
-            description: Unique event identifier (UUID) - topic key
+            description: "@dds_key Unique event identifier (UUID)"
           - name: header
             datatype: Header
           - name: category

@@ -1,0 +1,29 @@
+// Generated from test_multiline_desc.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef TEST_MULTILINE_DESC_IDL
+#define TEST_MULTILINE_DESC_IDL
+
+module test {
+    // Test namespace with multi-line description.
+    // This tests proper comment wrapping.
+
+    // Status enumeration with multi-line description.
+    // Each line should become a separate comment.
+    // This is the third line.
+    enum Status {
+        STATUS_OK,    // = 0
+        STATUS_ERROR    // = 1
+    };
+
+    // Message struct with multi-line description.
+    // Provides origin tracking, timestamps, and correlation.
+    // Used throughout the system.
+    struct Message {
+        string id;
+        long long timestamp;
+    };
+
+};  // module test
+
+#endif // TEST_MULTILINE_DESC_IDL

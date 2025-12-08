@@ -1,0 +1,26 @@
+# Test: IDL includes
+# Verifies that IFEX includes are converted to #include directives
+
+name: test_includes
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: test_primitives.ifex
+
+description: |
+  Test file that includes another IFEX file.
+  The generated IDL should have #include "test_primitives.idl"
+
+namespaces:
+  - name: test_inc
+    description: Test namespace that uses types from included file
+
+    structs:
+      - name: Wrapper
+        description: Wraps a type that uses primitives
+        members:
+          - name: id
+            datatype: string
+          - name: timestamp
+            datatype: int64

@@ -1,0 +1,45 @@
+# Test: Multi-line descriptions
+# Verifies that multi-line YAML descriptions are properly converted to comments
+
+name: test_multiline_desc
+major_version: 1
+minor_version: 0
+
+description: |
+  This is a multi-line description for the entire file.
+  It should be handled properly but isn't output in IDL.
+
+namespaces:
+  - name: test
+    description: |
+      Test namespace with multi-line description.
+      This tests proper comment wrapping.
+
+    enumerations:
+      - name: Status
+        datatype: uint8
+        description: |
+          Status enumeration with multi-line description.
+          Each line should become a separate comment.
+          This is the third line.
+        options:
+          - name: STATUS_OK
+            value: 0
+          - name: STATUS_ERROR
+            value: 1
+
+    structs:
+      - name: Message
+        description: |
+          Message struct with multi-line description.
+          Provides origin tracking, timestamps, and correlation.
+          Used throughout the system.
+        members:
+          - name: id
+            datatype: string
+            description: Unique message identifier
+          - name: timestamp
+            datatype: int64
+            description: |
+              Nanoseconds since Unix epoch.
+              High precision for real-time systems.

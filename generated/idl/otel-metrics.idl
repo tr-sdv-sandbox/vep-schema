@@ -25,6 +25,7 @@ module vep {
         sequence<KeyValue> labels;
         double value;
     };
+    #pragma keylist OtelCounter name
 
     // Metric that can increase or decrease. Use for temperatures,
     // memory usage, queue depths.
@@ -34,6 +35,7 @@ module vep {
         sequence<KeyValue> labels;
         double value;
     };
+    #pragma keylist OtelGauge name
 
     // Single histogram bucket
     struct OtelHistogramBucket {
@@ -50,6 +52,7 @@ module vep {
         double sample_sum;
         sequence<OtelHistogramBucket> buckets;
     };
+    #pragma keylist OtelHistogram name
 
     // Single quantile value
     struct OtelSummaryQuantile {
@@ -66,6 +69,7 @@ module vep {
         double sample_sum;
         sequence<OtelSummaryQuantile> quantiles;
     };
+    #pragma keylist OtelSummary name
 
 };  // module vep
 

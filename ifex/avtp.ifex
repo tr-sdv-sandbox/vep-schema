@@ -65,10 +65,10 @@ namespaces:
             datatype: Header
           - name: stream_id
             datatype: uint64
-            description: AVTP stream identifier - topic key
+            description: "@dds_key AVTP stream identifier"
           - name: can_id
             datatype: uint32
-            description: CAN arbitration ID - topic key
+            description: "@dds_key CAN arbitration ID"
           - name: bus_id
             datatype: uint8
             description: CAN bus identifier (0-31)
@@ -91,7 +91,7 @@ namespaces:
             datatype: Header
           - name: stream_id
             datatype: uint64
-            description: AVTP stream identifier - topic key
+            description: "@dds_key AVTP stream identifier"
           - name: frames
             datatype: AvtpCanFrame[]
 
@@ -117,7 +117,7 @@ namespaces:
             datatype: Header
           - name: stream_id
             datatype: uint64
-            description: AVTP stream identifier - topic key
+            description: "@dds_key AVTP stream identifier"
           - name: frames_received
             datatype: uint64
           - name: frames_sent

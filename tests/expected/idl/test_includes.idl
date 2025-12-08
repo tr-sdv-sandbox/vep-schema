@@ -1,0 +1,20 @@
+// Generated from test_includes.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef TEST_INCLUDES_IDL
+#define TEST_INCLUDES_IDL
+
+#include "test_primitives.idl"
+
+module test_inc {
+    // Test namespace that uses types from included file
+
+    // Wraps a type that uses primitives
+    struct Wrapper {
+        string id;
+        long long timestamp;
+    };
+
+};  // module test_inc
+
+#endif // TEST_INCLUDES_IDL

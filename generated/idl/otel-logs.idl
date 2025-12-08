@@ -35,6 +35,7 @@ module vep {
         string trace_id;
         string span_id;
     };
+    #pragma keylist OtelLogEntry component
 
 };  // module vep
 

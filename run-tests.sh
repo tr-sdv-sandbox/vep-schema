@@ -264,6 +264,30 @@ if 'namespaces' not in data:
                 continue
             fi
 
+            # Test 9: @dds_key annotation generates #pragma keylist
+            # Run this before the expected file check since it has inline assertions
+            if grep -q "test_dds_key" <<< "$name" 2>/dev/null; then
+                # Single key field
+                if grep -q '#pragma keylist KeyedMessage id' "$output" 2>/dev/null; then
+                    report_pass "$name: single @dds_key generates keylist"
+                else
+                    report_fail "$name: single @dds_key" "Missing #pragma keylist for KeyedMessage"
+                fi
+                # Multiple key fields
+                if grep -q '#pragma keylist MultiKeyMessage region sensor_id' "$output" 2>/dev/null; then
+                    report_pass "$name: multiple @dds_key generates keylist"
+                else
+                    report_fail "$name: multiple @dds_key" "Missing #pragma keylist for MultiKeyMessage"
+                fi
+                # No key should have no pragma
+                if grep -q '#pragma keylist NoKeyMessage' "$output" 2>/dev/null; then
+                    report_fail "$name: no @dds_key" "NoKeyMessage should not have keylist pragma"
+                else
+                    report_pass "$name: no @dds_key means no keylist"
+                fi
+                continue  # Done with this test file
+            fi
+
             # Check expected file exists
             if [ ! -f "$expected" ]; then
                 report_skip "$name.ifex → IDL" "No expected file: $expected"
@@ -354,6 +378,7 @@ if 'namespaces' not in data:
                     report_fail "$name: #include directive" "Missing #include for dependency"
                 fi
             fi
+
         done
 
         echo ""

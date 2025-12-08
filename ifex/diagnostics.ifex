@@ -38,7 +38,7 @@ namespaces:
         members:
           - name: variable_id
             datatype: string
-            description: Unique measurement identifier - topic key
+            description: "@dds_key Unique measurement identifier"
           - name: header
             datatype: Header
           - name: unit
@@ -56,7 +56,7 @@ namespaces:
         members:
           - name: variable_id
             datatype: string
-            description: Unique measurement identifier - topic key
+            description: "@dds_key Unique measurement identifier"
           - name: header
             datatype: Header
           - name: unit
@@ -78,7 +78,7 @@ namespaces:
         members:
           - name: variable_id
             datatype: string
-            description: Unique measurement identifier - topic key
+            description: "@dds_key Unique measurement identifier"
           - name: header
             datatype: Header
           - name: unit

@@ -266,7 +266,7 @@ namespaces:
         members:
           - name: path
             datatype: string
-            description: VSS path (e.g., "Vehicle.Speed") - topic key
+            description: "@dds_key VSS path (e.g., \"Vehicle.Speed\")"
           - name: header
             datatype: Header
           - name: quality

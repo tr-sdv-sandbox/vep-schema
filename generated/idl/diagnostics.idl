@@ -32,6 +32,7 @@ module vep {
         MeasurementType measurement_type;
         double value;
     };
+    #pragma keylist ScalarMeasurement variable_id
 
     // Multi-value diagnostic measurement for histograms and
     // distributions. The variable_id serves as the topic key.
@@ -44,6 +45,7 @@ module vep {
         sequence<double> bin_boundaries;
         double window_duration_s;
     };
+    #pragma keylist VectorMeasurement variable_id
 
     // 2D diagnostic measurement. Values stored row-major flattened.
     struct MatrixMeasurement {
@@ -55,6 +57,7 @@ module vep {
         unsigned long rows;
         unsigned long cols;
     };
+    #pragma keylist MatrixMeasurement variable_id
 
 };  // module vep
 

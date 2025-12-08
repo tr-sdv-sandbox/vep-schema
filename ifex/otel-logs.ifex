@@ -44,7 +44,7 @@ namespaces:
             datatype: OtelLogLevel
           - name: component
             datatype: string
-            description: Software component or service name
+            description: "@dds_key Software component or service name"
           - name: message
             datatype: string
             description: Human-readable log message

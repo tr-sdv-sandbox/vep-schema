@@ -237,8 +237,16 @@ module {{ n.name }} {
 {% endif %}
 {% endfor %}
     };
-{% if s.members|selectattr("name", "equalto", "path")|list %}
-    #pragma keylist {{ s.name }} path
+{# Generate keylist pragma for structs with key fields #}
+{# Key fields are marked with "@dds_key" in their description #}
+{% set key_members = [] %}
+{% for m in s.members %}
+{% if m.description and '@dds_key' in m.description %}
+{% set _ = key_members.append(m.name) %}
+{% endif %}
+{% endfor %}
+{% if key_members %}
+    #pragma keylist {{ s.name }} {{ key_members|join(' ') }}
 {% endif %}
 
 {% endfor %}

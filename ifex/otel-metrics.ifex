@@ -26,7 +26,7 @@ namespaces:
         members:
           - name: name
             datatype: string
-            description: Metric name (e.g., "requests_total") - topic key
+            description: "@dds_key Metric name (e.g., \"requests_total\")"
           - name: header
             datatype: Header
           - name: labels
@@ -41,7 +41,7 @@ namespaces:
         members:
           - name: name
             datatype: string
-            description: Metric name - topic key
+            description: "@dds_key Metric name"
           - name: header
             datatype: Header
           - name: labels
@@ -62,7 +62,7 @@ namespaces:
         members:
           - name: name
             datatype: string
-            description: Metric name - topic key
+            description: "@dds_key Metric name"
           - name: header
             datatype: Header
           - name: labels
@@ -88,7 +88,7 @@ namespaces:
         members:
           - name: name
             datatype: string
-            description: Metric name - topic key
+            description: "@dds_key Metric name"
           - name: header
             datatype: Header
           - name: labels

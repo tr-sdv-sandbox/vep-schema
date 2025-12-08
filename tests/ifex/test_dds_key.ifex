@@ -1,0 +1,34 @@
+# Test @dds_key annotation for DDS keylist pragma generation
+name: test_dds_key
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    structs:
+      - name: KeyedMessage
+        description: Message with a key field for DDS topic filtering
+        members:
+          - name: id
+            datatype: string
+            description: "@dds_key Unique identifier for this message"
+          - name: payload
+            datatype: string
+
+      - name: MultiKeyMessage
+        description: Message with multiple key fields
+        members:
+          - name: region
+            datatype: string
+            description: "@dds_key Geographic region"
+          - name: sensor_id
+            datatype: string
+            description: "@dds_key Sensor identifier"
+          - name: value
+            datatype: double
+
+      - name: NoKeyMessage
+        description: Message without any key fields
+        members:
+          - name: data
+            datatype: string
