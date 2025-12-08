@@ -1,0 +1,79 @@
+// Generated from vep_avtp.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_AVTP_IDL
+#define VEP_AVTP_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // AVTP Control Format message type
+    enum AvtpAcfType {
+        ACF_TYPE_CAN,    // = 0
+        ACF_TYPE_CAN_BRIEF,    // = 1
+        ACF_TYPE_LIN,    // = 2
+        ACF_TYPE_FLEXRAY,    // = 3
+        ACF_TYPE_SENSOR,    // = 4
+        ACF_TYPE_GPC    // = 5
+    };
+
+    // CAN frame flags
+    struct AvtpCanFlags {
+        boolean is_extended_id;
+        boolean is_fd;
+        boolean is_brs;
+        boolean is_esi;
+        boolean is_rtr;
+    };
+
+    // ACF CAN frame - CAN message encapsulated in AVTP.
+Maps to IEEE 1722 ACF CAN PDU.
+
+    struct AvtpCanFrame {
+        Header header;
+        unsigned long long stream_id;
+        unsigned long can_id;
+        octet bus_id;
+        AvtpCanFlags flags;
+        sequence<octet> payload;
+        unsigned long long avtp_timestamp;
+        unsigned long sequence_num;
+    };
+
+    // Batch of CAN frames for efficiency
+    struct AvtpCanBatch {
+        Header header;
+        unsigned long long stream_id;
+        sequence<AvtpCanFrame> frames;
+    };
+
+    // Triggered CAN trace capture for debugging
+    struct AvtpCanTrace {
+        Header header;
+        long long start_time_ns;
+        long long end_time_ns;
+        string trigger_event_id;
+        sequence<AvtpCanFrame> frames;
+    };
+
+    // AVTP stream statistics for monitoring
+    struct AvtpStreamStats {
+        Header header;
+        unsigned long long stream_id;
+        unsigned long long frames_received;
+        unsigned long long frames_sent;
+        unsigned long long sequence_errors;
+        unsigned long long timestamp_errors;
+        unsigned long long bytes_total;
+        double average_latency_us;
+    };
+
+};  // module vep
+
+#endif // VEP_AVTP_IDL

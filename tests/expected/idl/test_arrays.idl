@@ -1,0 +1,26 @@
+// Generated from test_arrays.ifex
+
+#ifndef TEST_ARRAYS_IDL
+#define TEST_ARRAYS_IDL
+
+module test {
+
+    // Struct containing arrays of all primitive types
+    struct AllArrays {
+        sequence<boolean> arr_bool;
+        sequence<octet> arr_int8;
+        sequence<short> arr_int16;
+        sequence<long> arr_int32;
+        sequence<long long> arr_int64;
+        sequence<octet> arr_uint8;
+        sequence<unsigned short> arr_uint16;
+        sequence<unsigned long> arr_uint32;
+        sequence<unsigned long long> arr_uint64;
+        sequence<float> arr_float;
+        sequence<double> arr_double;
+        sequence<string> arr_string;
+    };
+
+};  // module test
+
+#endif // TEST_ARRAYS_IDL

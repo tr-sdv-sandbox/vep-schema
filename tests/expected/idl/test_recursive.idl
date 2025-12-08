@@ -1,0 +1,32 @@
+// Generated from test_recursive.ifex
+
+#ifndef TEST_RECURSIVE_IDL
+#define TEST_RECURSIVE_IDL
+
+module test {
+
+    // Forward declarations
+    struct Container;
+
+    // A tree node that references itself via children
+    struct Node {
+        string name;
+        long value;
+        sequence<Node> children;
+    };
+
+    // Field that contains a Container (mutual recursion)
+    struct FieldValue {
+        string name;
+        Container container;
+    };
+
+    // Container that holds FieldValues (mutual recursion)
+    struct Container {
+        string type_name;
+        sequence<FieldValue> fields;
+    };
+
+};  // module test
+
+#endif // TEST_RECURSIVE_IDL

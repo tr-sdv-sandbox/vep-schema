@@ -1,0 +1,50 @@
+# Test: Enumeration types
+# Tests that enums preserve explicit values (not renumbered)
+
+name: test_enums
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    description: Test namespace for enumeration types
+
+    enumerations:
+      - name: SimpleEnum
+        datatype: uint8
+        description: Simple sequential enum
+        options:
+          - name: OPTION_ZERO
+            value: 0
+          - name: OPTION_ONE
+            value: 1
+          - name: OPTION_TWO
+            value: 2
+
+      - name: SparseEnum
+        datatype: uint8
+        description: Enum with gaps in values (MUST be preserved)
+        options:
+          - name: VALUE_EMPTY
+            value: 0
+          - name: VALUE_FIRST
+            value: 1
+          - name: VALUE_SECOND
+            value: 2
+          # Gap here (3-19 unused)
+          - name: VALUE_ARRAY_START
+            value: 20
+          - name: VALUE_ARRAY_SECOND
+            value: 21
+          # Gap here (22-39 unused)
+          - name: VALUE_STRUCT
+            value: 40
+
+    structs:
+      - name: UseEnums
+        description: Struct using enum types
+        members:
+          - name: simple
+            datatype: SimpleEnum
+          - name: sparse
+            datatype: SparseEnum

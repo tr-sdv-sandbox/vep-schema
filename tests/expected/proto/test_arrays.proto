@@ -1,0 +1,20 @@
+// Generated from test_arrays.ifex
+syntax = "proto3";
+
+package vep.test;
+
+// Struct containing arrays of all primitive types
+message AllArrays {
+  repeated bool arr_bool = 1;
+  repeated sint32 arr_int8 = 2;      // int8[] maps to repeated sint32
+  repeated sint32 arr_int16 = 3;     // int16[] maps to repeated sint32
+  repeated sint32 arr_int32 = 4;
+  repeated sint64 arr_int64 = 5;
+  repeated uint32 arr_uint8 = 6;     // uint8[] maps to repeated uint32
+  repeated uint32 arr_uint16 = 7;    // uint16[] maps to repeated uint32
+  repeated uint32 arr_uint32 = 8;
+  repeated uint64 arr_uint64 = 9;
+  repeated float arr_float = 10;
+  repeated double arr_double = 11;
+  repeated string arr_string = 12;
+}

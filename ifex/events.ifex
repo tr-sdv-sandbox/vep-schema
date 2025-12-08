@@ -1,0 +1,63 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Events - Vehicle events with signal context
+
+name: vep_events
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+  - file: vss-signal.ifex
+
+description: |
+  Vehicle event definitions. Events capture discrete occurrences
+  (harsh braking, DTCs, driver actions) with optional signal context.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: Severity
+        datatype: uint8
+        description: Event severity level
+        options:
+          - name: SEVERITY_INFO
+            value: 0
+          - name: SEVERITY_WARNING
+            value: 1
+          - name: SEVERITY_ERROR
+            value: 2
+          - name: SEVERITY_CRITICAL
+            value: 3
+
+    structs:
+      - name: Event
+        description: |
+          Vehicle event with optional signal context. The event_id
+          serves as the topic key.
+
+          Categories: ADAS, POWERTRAIN, CHASSIS, BODY, INFOTAINMENT
+          Event types: harsh_brake, dtc, door_open, collision_warning
+        members:
+          - name: event_id
+            datatype: string
+            description: Unique event identifier (UUID) - topic key
+          - name: header
+            datatype: Header
+          - name: category
+            datatype: string
+            description: Event category (ADAS, POWERTRAIN, etc.)
+          - name: event_type
+            datatype: string
+            description: Specific event type (harsh_brake, dtc, etc.)
+          - name: severity
+            datatype: Severity
+          - name: attributes
+            datatype: KeyValue[]
+            description: Event-specific attributes
+          - name: context
+            datatype: VssSignal[]
+            description: Signal snapshot at event time

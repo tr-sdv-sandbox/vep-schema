@@ -1,0 +1,43 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# VEP Base Types - Common types for all dataplane messages
+
+name: vep_types
+major_version: 1
+minor_version: 0
+
+description: |
+  Common type definitions for the Vehicle Edge Platform dataplane.
+  Domain-specific value types (VSS, OTEL, etc.) are in their own files.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    structs:
+      - name: Header
+        description: |
+          Common metadata for all messages. Provides origin tracking,
+          timestamps, sequencing, and correlation.
+        members:
+          - name: source_id
+            datatype: string
+            description: Origin of the data (e.g., "can_probe", "otel_probe")
+          - name: timestamp_ns
+            datatype: int64
+            description: Nanoseconds since Unix epoch
+          - name: seq_num
+            datatype: uint32
+            description: Sequence number for ordering and gap detection
+          - name: correlation_id
+            datatype: string
+            description: For request/response correlation (optional)
+
+      - name: KeyValue
+        description: Generic key-value pair for metadata and attributes
+        members:
+          - name: key
+            datatype: string
+          - name: value
+            datatype: string

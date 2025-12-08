@@ -1,0 +1,54 @@
+// Generated from vep_diagnostics.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_diagnostics;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Measurement accumulation semantics
+enum MeasurementType {
+  MEASUREMENT_TYPE_ACCUMULATED = 0;
+  MEASUREMENT_TYPE_MOMENTARY = 1;
+}
+
+// Single-value diagnostic measurement. The variable_id serves
+as the topic key.
+
+message ScalarMeasurement {
+  string variable_id = 1;
+  Header header = 2;
+  string unit = 3;
+  MeasurementType measurement_type = 4;
+  double value = 5;
+}
+
+// Multi-value diagnostic measurement for histograms and
+distributions. The variable_id serves as the topic key.
+
+message VectorMeasurement {
+  string variable_id = 1;
+  Header header = 2;
+  string unit = 3;
+  MeasurementType measurement_type = 4;
+  repeated double values = 5;
+  repeated double bin_boundaries = 6;
+  double window_duration_s = 7;
+}
+
+// 2D diagnostic measurement. Values stored row-major flattened.
+
+message MatrixMeasurement {
+  string variable_id = 1;
+  Header header = 2;
+  string unit = 3;
+  MeasurementType measurement_type = 4;
+  repeated double values = 5;
+  uint32 rows = 6;
+  uint32 cols = 7;
+}
+
+

@@ -1,0 +1,119 @@
+# Test: Complex realistic schema
+# Tests a realistic VEP-like schema with headers, signals, quality
+
+name: test_complex
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform test types
+
+    enumerations:
+      - name: Quality
+        datatype: uint8
+        description: Signal quality indicator
+        options:
+          - name: QUALITY_UNKNOWN
+            value: 0
+          - name: QUALITY_VALID
+            value: 1
+          - name: QUALITY_INVALID
+            value: 2
+          - name: QUALITY_NOT_AVAILABLE
+            value: 3
+
+      - name: ValueType
+        datatype: uint8
+        description: Type discriminator for Value
+        options:
+          - name: VALUE_TYPE_EMPTY
+            value: 0
+          - name: VALUE_TYPE_BOOL
+            value: 1
+          - name: VALUE_TYPE_INT32
+            value: 2
+          - name: VALUE_TYPE_INT64
+            value: 3
+          - name: VALUE_TYPE_FLOAT
+            value: 4
+          - name: VALUE_TYPE_DOUBLE
+            value: 5
+          - name: VALUE_TYPE_STRING
+            value: 6
+          # Arrays start at 20
+          - name: VALUE_TYPE_BOOL_ARRAY
+            value: 20
+          - name: VALUE_TYPE_INT32_ARRAY
+            value: 21
+          - name: VALUE_TYPE_FLOAT_ARRAY
+            value: 22
+          - name: VALUE_TYPE_STRING_ARRAY
+            value: 23
+
+    structs:
+      - name: Header
+        description: Common message header
+        members:
+          - name: source_id
+            datatype: string
+          - name: timestamp_ns
+            datatype: int64
+          - name: seq_num
+            datatype: uint32
+          - name: correlation_id
+            datatype: string
+
+      - name: KeyValue
+        description: Generic key-value pair
+        members:
+          - name: key
+            datatype: string
+          - name: value
+            datatype: string
+
+      - name: Value
+        description: Tagged union for VSS values
+        members:
+          - name: type
+            datatype: ValueType
+          - name: bool_value
+            datatype: boolean
+          - name: int32_value
+            datatype: int32
+          - name: int64_value
+            datatype: int64
+          - name: float_value
+            datatype: float
+          - name: double_value
+            datatype: double
+          - name: string_value
+            datatype: string
+          - name: bool_array
+            datatype: boolean[]
+          - name: int32_array
+            datatype: int32[]
+          - name: float_array
+            datatype: float[]
+          - name: string_array
+            datatype: string[]
+
+      - name: Signal
+        description: VSS signal with path, value, quality
+        members:
+          - name: path
+            datatype: string
+          - name: header
+            datatype: Header
+          - name: quality
+            datatype: Quality
+          - name: value
+            datatype: Value
+
+      - name: SignalBatch
+        description: Batch of signals for efficient transfer
+        members:
+          - name: header
+            datatype: Header
+          - name: signals
+            datatype: Signal[]

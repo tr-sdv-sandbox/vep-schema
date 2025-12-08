@@ -1,0 +1,68 @@
+// Generated from vep_uds_dtc.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_uds_dtc;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// UDS DTC status bits (ISO 14229-1). Can be combined as flags.
+
+enum UdsDtcStatus {
+  DTC_STATUS_TEST_FAILED = 1;
+  DTC_STATUS_TEST_FAILED_THIS_CYCLE = 2;
+  DTC_STATUS_PENDING = 4;
+  DTC_STATUS_CONFIRMED = 8;
+  DTC_STATUS_TEST_NOT_COMPLETED_SINCE_CLEAR = 16;
+  DTC_STATUS_TEST_FAILED_SINCE_CLEAR = 32;
+  DTC_STATUS_TEST_NOT_COMPLETED_THIS_CYCLE = 64;
+  DTC_STATUS_WARNING_INDICATOR = 128;
+}
+
+// UDS DTC severity (ISO 14229-1)
+enum UdsDtcSeverity {
+  DTC_SEVERITY_NO_SEVERITY = 0;
+  DTC_SEVERITY_MAINTENANCE_ONLY = 32;
+  DTC_SEVERITY_CHECK_AT_NEXT_HALT = 64;
+  DTC_SEVERITY_CHECK_IMMEDIATELY = 128;
+}
+
+// UDS Data Identifier value. Raw DID with data bytes.
+
+message UdsDid {
+  uint32 did_id = 1;
+  repeated uint32 data = 2;
+}
+
+// UDS freeze frame / snapshot record associated with a DTC.
+
+message UdsSnapshot {
+  uint32 record_number = 1;
+  repeated UdsDid dids = 2;
+}
+
+// UDS Diagnostic Trouble Code with status and metadata.
+
+message UdsDtc {
+  Header header = 1;
+  string ecu_id = 2;
+  uint32 dtc_number = 3;
+  uint32 status_mask = 4;
+  UdsDtcSeverity severity = 5;
+  uint32 occurrence_count = 6;
+  uint32 aging_count = 7;
+  repeated UdsSnapshot snapshots = 8;
+}
+
+// Batch of DTCs from a single ECU or scan.
+
+message UdsDtcBatch {
+  Header header = 1;
+  string ecu_id = 2;
+  repeated UdsDtc dtcs = 3;
+}
+
+

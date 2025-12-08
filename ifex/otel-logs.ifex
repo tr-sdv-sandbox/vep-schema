@@ -1,0 +1,59 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# OpenTelemetry Logs - Structured log entries
+
+name: vep_otel_logs
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  OpenTelemetry log entry types. Ingested via the OTEL probe from
+  OTLP gRPC. Supports leveled logging with structured fields and
+  trace correlation.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: OtelLogLevel
+        datatype: uint8
+        description: Log severity level (aligned with OTEL severity)
+        options:
+          - name: LOG_LEVEL_DEBUG
+            value: 0
+          - name: LOG_LEVEL_INFO
+            value: 1
+          - name: LOG_LEVEL_WARN
+            value: 2
+          - name: LOG_LEVEL_ERROR
+            value: 3
+
+    structs:
+      - name: OtelLogEntry
+        description: |
+          Structured log entry compatible with OpenTelemetry logs.
+        members:
+          - name: header
+            datatype: Header
+          - name: level
+            datatype: OtelLogLevel
+          - name: component
+            datatype: string
+            description: Software component or service name
+          - name: message
+            datatype: string
+            description: Human-readable log message
+          - name: attributes
+            datatype: KeyValue[]
+            description: Structured fields for machine parsing
+          - name: trace_id
+            datatype: string
+            description: Optional trace correlation ID
+          - name: span_id
+            datatype: string
+            description: Optional span correlation ID

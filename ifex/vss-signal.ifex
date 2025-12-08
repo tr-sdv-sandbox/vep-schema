@@ -1,0 +1,235 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# VSS Signal - Vehicle Signal Specification types
+
+name: vep_vss_signal
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  VSS (Vehicle Signal Specification) types for dataplane pub/sub.
+  Includes the full VSS type system with quality indicators and
+  struct support (VSS 4.0+).
+
+  Note: VssValue and VssStructValue are mutually recursive to support
+  arbitrarily nested structs. This works in Protobuf but DDS IDL
+  generators may need to flatten or limit nesting depth.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: VssQuality
+        datatype: uint8
+        description: VSS signal quality indicator
+        options:
+          - name: VSS_QUALITY_UNKNOWN
+            value: 0
+            description: Quality not specified
+          - name: VSS_QUALITY_VALID
+            value: 1
+            description: Signal is valid and reliable
+          - name: VSS_QUALITY_INVALID
+            value: 2
+            description: Signal is invalid (sensor error, out of range)
+          - name: VSS_QUALITY_NOT_AVAILABLE
+            value: 3
+            description: Signal not available (sensor disconnected)
+
+      - name: VssValueType
+        datatype: uint8
+        description: |
+          Discriminator for VssValue. Indicates which field contains data.
+        options:
+          - name: VSS_VALUE_TYPE_EMPTY
+            value: 0
+
+          # Primitive types (1-12)
+          - name: VSS_VALUE_TYPE_STRING
+            value: 1
+          - name: VSS_VALUE_TYPE_BOOL
+            value: 2
+          - name: VSS_VALUE_TYPE_INT8
+            value: 3
+          - name: VSS_VALUE_TYPE_INT16
+            value: 4
+          - name: VSS_VALUE_TYPE_INT32
+            value: 5
+          - name: VSS_VALUE_TYPE_INT64
+            value: 6
+          - name: VSS_VALUE_TYPE_UINT8
+            value: 7
+          - name: VSS_VALUE_TYPE_UINT16
+            value: 8
+          - name: VSS_VALUE_TYPE_UINT32
+            value: 9
+          - name: VSS_VALUE_TYPE_UINT64
+            value: 10
+          - name: VSS_VALUE_TYPE_FLOAT
+            value: 11
+          - name: VSS_VALUE_TYPE_DOUBLE
+            value: 12
+
+          # Array types (20-31)
+          - name: VSS_VALUE_TYPE_STRING_ARRAY
+            value: 20
+          - name: VSS_VALUE_TYPE_BOOL_ARRAY
+            value: 21
+          - name: VSS_VALUE_TYPE_INT8_ARRAY
+            value: 22
+          - name: VSS_VALUE_TYPE_INT16_ARRAY
+            value: 23
+          - name: VSS_VALUE_TYPE_INT32_ARRAY
+            value: 24
+          - name: VSS_VALUE_TYPE_INT64_ARRAY
+            value: 25
+          - name: VSS_VALUE_TYPE_UINT8_ARRAY
+            value: 26
+          - name: VSS_VALUE_TYPE_UINT16_ARRAY
+            value: 27
+          - name: VSS_VALUE_TYPE_UINT32_ARRAY
+            value: 28
+          - name: VSS_VALUE_TYPE_UINT64_ARRAY
+            value: 29
+          - name: VSS_VALUE_TYPE_FLOAT_ARRAY
+            value: 30
+          - name: VSS_VALUE_TYPE_DOUBLE_ARRAY
+            value: 31
+
+          # Struct types (40-41) - VSS 4.0+
+          - name: VSS_VALUE_TYPE_STRUCT
+            value: 40
+          - name: VSS_VALUE_TYPE_STRUCT_ARRAY
+            value: 41
+
+    structs:
+      # Forward reference note: VssStructValue and VssValue are mutually recursive.
+      # VssValue.struct_value → VssStructValue
+      # VssStructValue.fields[].value → VssValue
+
+      - name: VssStructField
+        description: |
+          A named field within a VSS struct. The value can be any VssValue
+          including nested structs (recursive).
+        members:
+          - name: name
+            datatype: string
+            description: Field name (e.g., "latitude", "address")
+          - name: value
+            datatype: VssValue
+            description: Field value (can be primitive, array, or nested struct)
+
+      - name: VssStructValue
+        description: |
+          VSS struct type value (VSS 4.0+). A named collection of fields.
+          Fields can contain nested VssStructValue via VssValue.
+        members:
+          - name: type_name
+            datatype: string
+            description: Struct type identifier (e.g., "DeliveryInfo", "Position")
+          - name: fields
+            datatype: VssStructField[]
+            description: Named fields with values
+
+      - name: VssValue
+        description: |
+          VSS value container. Only the field matching 'type' is valid.
+          Supports primitives, arrays, and nested structs (recursive).
+        members:
+          - name: type
+            datatype: VssValueType
+
+          # Primitive values
+          - name: bool_value
+            datatype: boolean
+          - name: int8_value
+            datatype: int8
+          - name: int16_value
+            datatype: int16
+          - name: int32_value
+            datatype: int32
+          - name: int64_value
+            datatype: int64
+          - name: uint8_value
+            datatype: uint8
+          - name: uint16_value
+            datatype: uint16
+          - name: uint32_value
+            datatype: uint32
+          - name: uint64_value
+            datatype: uint64
+          - name: float_value
+            datatype: float
+          - name: double_value
+            datatype: double
+          - name: string_value
+            datatype: string
+
+          # Array values
+          - name: bool_array
+            datatype: boolean[]
+          - name: int8_array
+            datatype: int8[]
+          - name: int16_array
+            datatype: int16[]
+          - name: int32_array
+            datatype: int32[]
+          - name: int64_array
+            datatype: int64[]
+          - name: uint8_array
+            datatype: uint8[]
+          - name: uint16_array
+            datatype: uint16[]
+          - name: uint32_array
+            datatype: uint32[]
+          - name: uint64_array
+            datatype: uint64[]
+          - name: float_array
+            datatype: float[]
+          - name: double_array
+            datatype: double[]
+          - name: string_array
+            datatype: string[]
+
+          # Struct values (recursive)
+          - name: struct_value
+            datatype: VssStructValue
+            description: Single nested struct
+          - name: struct_array
+            datatype: VssStructValue[]
+            description: Array of nested structs
+
+      - name: VssSignal
+        description: |
+          VSS signal with path, value, and quality. The path field serves
+          as the topic key for filtering.
+
+          Example paths:
+            - Vehicle.Speed
+            - Vehicle.Powertrain.TractionBattery.StateOfCharge.Current
+            - Vehicle.Cabin.Infotainment.Navigation.DestinationSet.Latitude
+        members:
+          - name: path
+            datatype: string
+            description: VSS path (e.g., "Vehicle.Speed") - topic key
+          - name: header
+            datatype: Header
+          - name: quality
+            datatype: VssQuality
+          - name: value
+            datatype: VssValue
+
+      - name: VssSignalBatch
+        description: |
+          Groups multiple VSS signals for efficient bulk transfer.
+        members:
+          - name: header
+            datatype: Header
+            description: Batch-level metadata
+          - name: signals
+            datatype: VssSignal[]

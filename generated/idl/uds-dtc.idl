@@ -1,0 +1,76 @@
+// Generated from vep_uds_dtc.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_UDS_DTC_IDL
+#define VEP_UDS_DTC_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // UDS DTC status bits (ISO 14229-1). Can be combined as flags.
+
+    @bit_bound(8)
+    enum UdsDtcStatus {
+        @value(1) DTC_STATUS_TEST_FAILED,
+        @value(2) DTC_STATUS_TEST_FAILED_THIS_CYCLE,
+        @value(4) DTC_STATUS_PENDING,
+        @value(8) DTC_STATUS_CONFIRMED,
+        @value(16) DTC_STATUS_TEST_NOT_COMPLETED_SINCE_CLEAR,
+        @value(32) DTC_STATUS_TEST_FAILED_SINCE_CLEAR,
+        @value(64) DTC_STATUS_TEST_NOT_COMPLETED_THIS_CYCLE,
+        @value(128) DTC_STATUS_WARNING_INDICATOR
+    };
+
+    // UDS DTC severity (ISO 14229-1)
+    @bit_bound(8)
+    enum UdsDtcSeverity {
+        @value(0) DTC_SEVERITY_NO_SEVERITY,
+        @value(32) DTC_SEVERITY_MAINTENANCE_ONLY,
+        @value(64) DTC_SEVERITY_CHECK_AT_NEXT_HALT,
+        @value(128) DTC_SEVERITY_CHECK_IMMEDIATELY
+    };
+
+    // UDS Data Identifier value. Raw DID with data bytes.
+
+    struct UdsDid {
+        unsigned short did_id;
+        sequence<octet> data;
+    };
+
+    // UDS freeze frame / snapshot record associated with a DTC.
+
+    struct UdsSnapshot {
+        octet record_number;
+        sequence<UdsDid> dids;
+    };
+
+    // UDS Diagnostic Trouble Code with status and metadata.
+
+    struct UdsDtc {
+        Header header;
+        string ecu_id;
+        unsigned long dtc_number;
+        octet status_mask;
+        UdsDtcSeverity severity;
+        octet occurrence_count;
+        octet aging_count;
+        sequence<UdsSnapshot> snapshots;
+    };
+
+    // Batch of DTCs from a single ECU or scan.
+
+    struct UdsDtcBatch {
+        Header header;
+        string ecu_id;
+        sequence<UdsDtc> dtcs;
+    };
+
+};  // module vep
+
+#endif // VEP_UDS_DTC_IDL

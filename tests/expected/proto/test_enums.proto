@@ -1,0 +1,29 @@
+// Generated from test_enums.ifex
+syntax = "proto3";
+
+package vep.test;
+
+// Simple sequential enum
+enum SimpleEnum {
+  OPTION_ZERO = 0;
+  OPTION_ONE = 1;
+  OPTION_TWO = 2;
+}
+
+// Enum with gaps in values (MUST be preserved)
+enum SparseEnum {
+  VALUE_EMPTY = 0;
+  VALUE_FIRST = 1;
+  VALUE_SECOND = 2;
+  // Gap preserved: 3-19 unused
+  VALUE_ARRAY_START = 20;
+  VALUE_ARRAY_SECOND = 21;
+  // Gap preserved: 22-39 unused
+  VALUE_STRUCT = 40;
+}
+
+// Struct using enum types
+message UseEnums {
+  SimpleEnum simple = 1;
+  SparseEnum sparse = 2;
+}

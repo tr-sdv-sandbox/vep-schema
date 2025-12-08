@@ -1,0 +1,40 @@
+// Generated from vep_opaque.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_OPAQUE_IDL
+#define VEP_OPAQUE_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Raw memory dump from an ECU or real-time partition.
+
+    struct MemoryDump {
+        Header header;
+        string ecu_id;
+        string region_name;
+        unsigned long long base_address;
+        sequence<octet> data;
+        sequence<KeyValue> metadata;
+    };
+
+    // Generic opaque capture for arbitrary binary data.
+
+    struct OpaqueCapture {
+        Header header;
+        string capture_type;
+        string source_id;
+        string trigger_event_id;
+        sequence<octet> payload;
+        sequence<KeyValue> metadata;
+    };
+
+};  // module vep
+
+#endif // VEP_OPAQUE_IDL

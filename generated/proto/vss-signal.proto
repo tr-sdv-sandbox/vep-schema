@@ -1,0 +1,123 @@
+// Generated from vep_vss_signal.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_vss_signal;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// VSS signal quality indicator
+enum VssQuality {
+  VSS_QUALITY_UNKNOWN = 0;
+  VSS_QUALITY_VALID = 1;
+  VSS_QUALITY_INVALID = 2;
+  VSS_QUALITY_NOT_AVAILABLE = 3;
+}
+
+// Discriminator for VssValue. Indicates which field contains data.
+
+enum VssValueType {
+  VSS_VALUE_TYPE_EMPTY = 0;
+  VSS_VALUE_TYPE_STRING = 1;
+  VSS_VALUE_TYPE_BOOL = 2;
+  VSS_VALUE_TYPE_INT8 = 3;
+  VSS_VALUE_TYPE_INT16 = 4;
+  VSS_VALUE_TYPE_INT32 = 5;
+  VSS_VALUE_TYPE_INT64 = 6;
+  VSS_VALUE_TYPE_UINT8 = 7;
+  VSS_VALUE_TYPE_UINT16 = 8;
+  VSS_VALUE_TYPE_UINT32 = 9;
+  VSS_VALUE_TYPE_UINT64 = 10;
+  VSS_VALUE_TYPE_FLOAT = 11;
+  VSS_VALUE_TYPE_DOUBLE = 12;
+  VSS_VALUE_TYPE_STRING_ARRAY = 20;
+  VSS_VALUE_TYPE_BOOL_ARRAY = 21;
+  VSS_VALUE_TYPE_INT8_ARRAY = 22;
+  VSS_VALUE_TYPE_INT16_ARRAY = 23;
+  VSS_VALUE_TYPE_INT32_ARRAY = 24;
+  VSS_VALUE_TYPE_INT64_ARRAY = 25;
+  VSS_VALUE_TYPE_UINT8_ARRAY = 26;
+  VSS_VALUE_TYPE_UINT16_ARRAY = 27;
+  VSS_VALUE_TYPE_UINT32_ARRAY = 28;
+  VSS_VALUE_TYPE_UINT64_ARRAY = 29;
+  VSS_VALUE_TYPE_FLOAT_ARRAY = 30;
+  VSS_VALUE_TYPE_DOUBLE_ARRAY = 31;
+  VSS_VALUE_TYPE_STRUCT = 40;
+  VSS_VALUE_TYPE_STRUCT_ARRAY = 41;
+}
+
+// A named field within a VSS struct. The value can be any VssValue
+including nested structs (recursive).
+
+message VssStructField {
+  string name = 1;
+  VssValue value = 2;
+}
+
+// VSS struct type value (VSS 4.0+). A named collection of fields.
+Fields can contain nested VssStructValue via VssValue.
+
+message VssStructValue {
+  string type_name = 1;
+  repeated VssStructField fields = 2;
+}
+
+// VSS value container. Only the field matching 'type' is valid.
+Supports primitives, arrays, and nested structs (recursive).
+
+message VssValue {
+  VssValueType type = 1;
+  bool bool_value = 2;
+  sint32 int8_value = 3;
+  sint32 int16_value = 4;
+  sint32 int32_value = 5;
+  sint64 int64_value = 6;
+  uint32 uint8_value = 7;
+  uint32 uint16_value = 8;
+  uint32 uint32_value = 9;
+  uint64 uint64_value = 10;
+  float float_value = 11;
+  double double_value = 12;
+  string string_value = 13;
+  repeated bool bool_array = 14;
+  repeated sint32 int8_array = 15;
+  repeated sint32 int16_array = 16;
+  repeated sint32 int32_array = 17;
+  repeated sint64 int64_array = 18;
+  repeated uint32 uint8_array = 19;
+  repeated uint32 uint16_array = 20;
+  repeated uint32 uint32_array = 21;
+  repeated uint64 uint64_array = 22;
+  repeated float float_array = 23;
+  repeated double double_array = 24;
+  repeated string string_array = 25;
+  VssStructValue struct_value = 26;
+  repeated VssStructValue struct_array = 27;
+}
+
+// VSS signal with path, value, and quality. The path field serves
+as the topic key for filtering.
+
+Example paths:
+  - Vehicle.Speed
+  - Vehicle.Powertrain.TractionBattery.StateOfCharge.Current
+  - Vehicle.Cabin.Infotainment.Navigation.DestinationSet.Latitude
+
+message VssSignal {
+  string path = 1;
+  Header header = 2;
+  VssQuality quality = 3;
+  VssValue value = 4;
+}
+
+// Groups multiple VSS signals for efficient bulk transfer.
+
+message VssSignalBatch {
+  Header header = 1;
+  repeated VssSignal signals = 2;
+}
+
+

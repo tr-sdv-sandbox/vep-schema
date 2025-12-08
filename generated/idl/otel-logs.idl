@@ -1,0 +1,38 @@
+// Generated from vep_otel_logs.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_OTEL_LOGS_IDL
+#define VEP_OTEL_LOGS_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Log severity level (aligned with OTEL severity)
+    enum OtelLogLevel {
+        LOG_LEVEL_DEBUG,    // = 0
+        LOG_LEVEL_INFO,    // = 1
+        LOG_LEVEL_WARN,    // = 2
+        LOG_LEVEL_ERROR    // = 3
+    };
+
+    // Structured log entry compatible with OpenTelemetry logs.
+
+    struct OtelLogEntry {
+        Header header;
+        OtelLogLevel level;
+        string component;
+        string message;
+        sequence<KeyValue> attributes;
+        string trace_id;
+        string span_id;
+    };
+
+};  // module vep
+
+#endif // VEP_OTEL_LOGS_IDL

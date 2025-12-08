@@ -1,0 +1,17 @@
+// Generated from test_nested_structs.ifex
+syntax = "proto3";
+
+package vep.test;
+
+// Inner struct to be nested
+message Inner {
+  sint32 x = 1;
+  sint32 y = 2;
+}
+
+// Outer struct containing Inner
+message Outer {
+  string id = 1;
+  Inner position = 2;
+  repeated Inner positions = 3;
+}

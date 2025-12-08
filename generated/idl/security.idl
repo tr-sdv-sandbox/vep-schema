@@ -1,0 +1,39 @@
+// Generated from vep_security.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_SECURITY_IDL
+#define VEP_SECURITY_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Threat severity classification
+    enum ThreatLevel {
+        THREAT_LEVEL_LOW,    // = 0
+        THREAT_LEVEL_MEDIUM,    // = 1
+        THREAT_LEVEL_HIGH,    // = 2
+        THREAT_LEVEL_CRITICAL    // = 3
+    };
+
+    // Security incident for VSOC alerting. Contains threat
+indicators and evidence.
+
+    struct SecurityIncident {
+        string incident_id;
+        Header header;
+        ThreatLevel threat_level;
+        string incident_type;
+        string description;
+        sequence<KeyValue> indicators;
+        sequence<octet> raw_evidence;
+    };
+
+};  // module vep
+
+#endif // VEP_SECURITY_IDL

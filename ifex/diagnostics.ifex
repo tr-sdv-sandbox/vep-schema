@@ -1,0 +1,94 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Diagnostics - Scraped statistics and measurements
+
+name: vep_diagnostics
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  Diagnostic measurement types for scraped statistics. Supports scalar,
+  vector (histograms, distributions), and matrix measurements.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: MeasurementType
+        datatype: uint8
+        description: Measurement accumulation semantics
+        options:
+          - name: MEASUREMENT_TYPE_ACCUMULATED
+            value: 0
+            description: Cumulative value (counters, totals)
+          - name: MEASUREMENT_TYPE_MOMENTARY
+            value: 1
+            description: Point-in-time value (gauges, snapshots)
+
+    structs:
+      - name: ScalarMeasurement
+        description: |
+          Single-value diagnostic measurement. The variable_id serves
+          as the topic key.
+        members:
+          - name: variable_id
+            datatype: string
+            description: Unique measurement identifier - topic key
+          - name: header
+            datatype: Header
+          - name: unit
+            datatype: string
+            description: Unit of measurement (e.g., "rpm", "celsius")
+          - name: measurement_type
+            datatype: MeasurementType
+          - name: value
+            datatype: double
+
+      - name: VectorMeasurement
+        description: |
+          Multi-value diagnostic measurement for histograms and
+          distributions. The variable_id serves as the topic key.
+        members:
+          - name: variable_id
+            datatype: string
+            description: Unique measurement identifier - topic key
+          - name: header
+            datatype: Header
+          - name: unit
+            datatype: string
+          - name: measurement_type
+            datatype: MeasurementType
+          - name: values
+            datatype: double[]
+          - name: bin_boundaries
+            datatype: double[]
+            description: Histogram bin boundaries (optional)
+          - name: window_duration_s
+            datatype: double
+            description: Sliding window duration in seconds (optional)
+
+      - name: MatrixMeasurement
+        description: |
+          2D diagnostic measurement. Values stored row-major flattened.
+        members:
+          - name: variable_id
+            datatype: string
+            description: Unique measurement identifier - topic key
+          - name: header
+            datatype: Header
+          - name: unit
+            datatype: string
+          - name: measurement_type
+            datatype: MeasurementType
+          - name: values
+            datatype: double[]
+            description: Row-major flattened matrix values
+          - name: rows
+            datatype: uint32
+          - name: cols
+            datatype: uint32

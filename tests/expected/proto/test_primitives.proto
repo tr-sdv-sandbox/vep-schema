@@ -1,0 +1,20 @@
+// Generated from test_primitives.ifex
+syntax = "proto3";
+
+package vep.test;
+
+// Struct containing all primitive types
+message AllPrimitives {
+  bool val_bool = 1;
+  sint32 val_int8 = 2;      // int8 maps to sint32 (zigzag encoding)
+  sint32 val_int16 = 3;     // int16 maps to sint32
+  sint32 val_int32 = 4;     // int32 maps to sint32
+  sint64 val_int64 = 5;     // int64 maps to sint64
+  uint32 val_uint8 = 6;     // uint8 maps to uint32
+  uint32 val_uint16 = 7;    // uint16 maps to uint32
+  uint32 val_uint32 = 8;
+  uint64 val_uint64 = 9;
+  float val_float = 10;
+  double val_double = 11;
+  string val_string = 12;
+}

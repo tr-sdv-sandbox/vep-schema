@@ -1,0 +1,60 @@
+// Generated from vep_diagnostics.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_DIAGNOSTICS_IDL
+#define VEP_DIAGNOSTICS_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Measurement accumulation semantics
+    enum MeasurementType {
+        MEASUREMENT_TYPE_ACCUMULATED,    // = 0
+        MEASUREMENT_TYPE_MOMENTARY    // = 1
+    };
+
+    // Single-value diagnostic measurement. The variable_id serves
+as the topic key.
+
+    struct ScalarMeasurement {
+        string variable_id;
+        Header header;
+        string unit;
+        MeasurementType measurement_type;
+        double value;
+    };
+
+    // Multi-value diagnostic measurement for histograms and
+distributions. The variable_id serves as the topic key.
+
+    struct VectorMeasurement {
+        string variable_id;
+        Header header;
+        string unit;
+        MeasurementType measurement_type;
+        sequence<double> values;
+        sequence<double> bin_boundaries;
+        double window_duration_s;
+    };
+
+    // 2D diagnostic measurement. Values stored row-major flattened.
+
+    struct MatrixMeasurement {
+        string variable_id;
+        Header header;
+        string unit;
+        MeasurementType measurement_type;
+        sequence<double> values;
+        unsigned long rows;
+        unsigned long cols;
+    };
+
+};  // module vep
+
+#endif // VEP_DIAGNOSTICS_IDL

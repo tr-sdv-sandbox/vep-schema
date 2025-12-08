@@ -1,0 +1,28 @@
+// Generated from vep_types.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_types;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Common metadata for all messages. Provides origin tracking,
+timestamps, sequencing, and correlation.
+
+message Header {
+  string source_id = 1;
+  sint64 timestamp_ns = 2;
+  uint32 seq_num = 3;
+  string correlation_id = 4;
+}
+
+// Generic key-value pair for metadata and attributes
+message KeyValue {
+  string key = 1;
+  string value = 2;
+}
+
+

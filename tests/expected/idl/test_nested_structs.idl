@@ -1,0 +1,23 @@
+// Generated from test_nested_structs.ifex
+
+#ifndef TEST_NESTED_STRUCTS_IDL
+#define TEST_NESTED_STRUCTS_IDL
+
+module test {
+
+    // Inner struct to be nested
+    struct Inner {
+        long x;
+        long y;
+    };
+
+    // Outer struct containing Inner
+    struct Outer {
+        string id;
+        Inner position;
+        sequence<Inner> positions;
+    };
+
+};  // module test
+
+#endif // TEST_NESTED_STRUCTS_IDL

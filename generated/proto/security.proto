@@ -1,0 +1,33 @@
+// Generated from vep_security.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_security;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Threat severity classification
+enum ThreatLevel {
+  THREAT_LEVEL_LOW = 0;
+  THREAT_LEVEL_MEDIUM = 1;
+  THREAT_LEVEL_HIGH = 2;
+  THREAT_LEVEL_CRITICAL = 3;
+}
+
+// Security incident for VSOC alerting. Contains threat
+indicators and evidence.
+
+message SecurityIncident {
+  string incident_id = 1;
+  Header header = 2;
+  ThreatLevel threat_level = 3;
+  string incident_type = 4;
+  string description = 5;
+  repeated KeyValue indicators = 6;
+  repeated uint32 raw_evidence = 7;
+}
+
+

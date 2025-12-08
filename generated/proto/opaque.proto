@@ -1,0 +1,34 @@
+// Generated from vep_opaque.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_opaque;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Raw memory dump from an ECU or real-time partition.
+
+message MemoryDump {
+  Header header = 1;
+  string ecu_id = 2;
+  string region_name = 3;
+  uint64 base_address = 4;
+  repeated uint32 data = 5;
+  repeated KeyValue metadata = 6;
+}
+
+// Generic opaque capture for arbitrary binary data.
+
+message OpaqueCapture {
+  Header header = 1;
+  string capture_type = 2;
+  string source_id = 3;
+  string trigger_event_id = 4;
+  repeated uint32 payload = 5;
+  repeated KeyValue metadata = 6;
+}
+
+

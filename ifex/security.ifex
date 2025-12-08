@@ -1,0 +1,58 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Security - Cybersecurity incident types for VSOC
+
+name: vep_security
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  Cybersecurity incident types for VSOC (Vehicle Security Operations
+  Center) alerting. Captures threat indicators and evidence.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: ThreatLevel
+        datatype: uint8
+        description: Threat severity classification
+        options:
+          - name: THREAT_LEVEL_LOW
+            value: 0
+          - name: THREAT_LEVEL_MEDIUM
+            value: 1
+          - name: THREAT_LEVEL_HIGH
+            value: 2
+          - name: THREAT_LEVEL_CRITICAL
+            value: 3
+
+    structs:
+      - name: SecurityIncident
+        description: |
+          Security incident for VSOC alerting. Contains threat
+          indicators and evidence.
+        members:
+          - name: incident_id
+            datatype: string
+            description: Unique incident identifier (UUID) - topic key
+          - name: header
+            datatype: Header
+          - name: threat_level
+            datatype: ThreatLevel
+          - name: incident_type
+            datatype: string
+            description: Type (e.g., "intrusion", "anomaly", "malware")
+          - name: description
+            datatype: string
+          - name: indicators
+            datatype: KeyValue[]
+            description: Indicators of compromise (IOCs)
+          - name: raw_evidence
+            datatype: uint8[]
+            description: Optional raw data for forensics

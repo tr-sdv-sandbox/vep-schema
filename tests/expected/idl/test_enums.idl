@@ -1,0 +1,35 @@
+// Generated from test_enums.ifex
+
+#ifndef TEST_ENUMS_IDL
+#define TEST_ENUMS_IDL
+
+module test {
+
+    // Simple sequential enum
+    enum SimpleEnum {
+        OPTION_ZERO,    // = 0
+        OPTION_ONE,     // = 1
+        OPTION_TWO      // = 2
+    };
+
+    // Enum with gaps in values (MUST be preserved)
+    // Note: DDS IDL enums are sequential, explicit values via @value annotation
+    @bit_bound(8)
+    enum SparseEnum {
+        @value(0) VALUE_EMPTY,
+        @value(1) VALUE_FIRST,
+        @value(2) VALUE_SECOND,
+        @value(20) VALUE_ARRAY_START,
+        @value(21) VALUE_ARRAY_SECOND,
+        @value(40) VALUE_STRUCT
+    };
+
+    // Struct using enum types
+    struct UseEnums {
+        SimpleEnum simple;
+        SparseEnum sparse;
+    };
+
+};  // module test
+
+#endif // TEST_ENUMS_IDL

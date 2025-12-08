@@ -1,0 +1,70 @@
+// Generated from vep_otel_metrics.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_OTEL_METRICS_IDL
+#define VEP_OTEL_METRICS_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Cumulative metric that only increases (or resets to zero).
+Use for request counts, bytes processed, errors.
+
+    struct OtelCounter {
+        string name;
+        Header header;
+        sequence<KeyValue> labels;
+        double value;
+    };
+
+    // Metric that can increase or decrease. Use for temperatures,
+memory usage, queue depths.
+
+    struct OtelGauge {
+        string name;
+        Header header;
+        sequence<KeyValue> labels;
+        double value;
+    };
+
+    // Single histogram bucket
+    struct OtelHistogramBucket {
+        double upper_bound;
+        unsigned long long cumulative_count;
+    };
+
+    // Distribution of observations in buckets
+    struct OtelHistogram {
+        string name;
+        Header header;
+        sequence<KeyValue> labels;
+        unsigned long long sample_count;
+        double sample_sum;
+        sequence<OtelHistogramBucket> buckets;
+    };
+
+    // Single quantile value
+    struct OtelSummaryQuantile {
+        double quantile;
+        double value;
+    };
+
+    // Pre-calculated quantiles over a sliding time window
+    struct OtelSummary {
+        string name;
+        Header header;
+        sequence<KeyValue> labels;
+        unsigned long long sample_count;
+        double sample_sum;
+        sequence<OtelSummaryQuantile> quantiles;
+    };
+
+};  // module vep
+
+#endif // VEP_OTEL_METRICS_IDL

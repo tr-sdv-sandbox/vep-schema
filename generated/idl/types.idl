@@ -1,0 +1,34 @@
+// Generated from vep_types.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_TYPES_IDL
+#define VEP_TYPES_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Common metadata for all messages. Provides origin tracking,
+timestamps, sequencing, and correlation.
+
+    struct Header {
+        string source_id;
+        long long timestamp_ns;
+        unsigned long seq_num;
+        string correlation_id;
+    };
+
+    // Generic key-value pair for metadata and attributes
+    struct KeyValue {
+        string key;
+        string value;
+    };
+
+};  // module vep
+
+#endif // VEP_TYPES_IDL

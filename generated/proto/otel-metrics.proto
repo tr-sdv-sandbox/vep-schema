@@ -1,0 +1,64 @@
+// Generated from vep_otel_metrics.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_otel_metrics;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Cumulative metric that only increases (or resets to zero).
+Use for request counts, bytes processed, errors.
+
+message OtelCounter {
+  string name = 1;
+  Header header = 2;
+  repeated KeyValue labels = 3;
+  double value = 4;
+}
+
+// Metric that can increase or decrease. Use for temperatures,
+memory usage, queue depths.
+
+message OtelGauge {
+  string name = 1;
+  Header header = 2;
+  repeated KeyValue labels = 3;
+  double value = 4;
+}
+
+// Single histogram bucket
+message OtelHistogramBucket {
+  double upper_bound = 1;
+  uint64 cumulative_count = 2;
+}
+
+// Distribution of observations in buckets
+message OtelHistogram {
+  string name = 1;
+  Header header = 2;
+  repeated KeyValue labels = 3;
+  uint64 sample_count = 4;
+  double sample_sum = 5;
+  repeated OtelHistogramBucket buckets = 6;
+}
+
+// Single quantile value
+message OtelSummaryQuantile {
+  double quantile = 1;
+  double value = 2;
+}
+
+// Pre-calculated quantiles over a sliding time window
+message OtelSummary {
+  string name = 1;
+  Header header = 2;
+  repeated KeyValue labels = 3;
+  uint64 sample_count = 4;
+  double sample_sum = 5;
+  repeated OtelSummaryQuantile quantiles = 6;
+}
+
+

@@ -1,0 +1,78 @@
+// Generated from test_complex.ifex
+
+#ifndef TEST_COMPLEX_IDL
+#define TEST_COMPLEX_IDL
+
+module vep {
+
+    // Signal quality indicator
+    enum Quality {
+        QUALITY_UNKNOWN,        // = 0
+        QUALITY_VALID,          // = 1
+        QUALITY_INVALID,        // = 2
+        QUALITY_NOT_AVAILABLE   // = 3
+    };
+
+    // Type discriminator for Value
+    @bit_bound(8)
+    enum ValueType {
+        @value(0) VALUE_TYPE_EMPTY,
+        @value(1) VALUE_TYPE_BOOL,
+        @value(2) VALUE_TYPE_INT32,
+        @value(3) VALUE_TYPE_INT64,
+        @value(4) VALUE_TYPE_FLOAT,
+        @value(5) VALUE_TYPE_DOUBLE,
+        @value(6) VALUE_TYPE_STRING,
+        @value(20) VALUE_TYPE_BOOL_ARRAY,
+        @value(21) VALUE_TYPE_INT32_ARRAY,
+        @value(22) VALUE_TYPE_FLOAT_ARRAY,
+        @value(23) VALUE_TYPE_STRING_ARRAY
+    };
+
+    // Common message header
+    struct Header {
+        string source_id;
+        long long timestamp_ns;
+        unsigned long seq_num;
+        string correlation_id;
+    };
+
+    // Generic key-value pair
+    struct KeyValue {
+        string key;
+        string value;
+    };
+
+    // Tagged union for VSS values
+    struct Value {
+        ValueType type;
+        boolean bool_value;
+        long int32_value;
+        long long int64_value;
+        float float_value;
+        double double_value;
+        string string_value;
+        sequence<boolean> bool_array;
+        sequence<long> int32_array;
+        sequence<float> float_array;
+        sequence<string> string_array;
+    };
+
+    // VSS signal with path, value, quality
+    struct Signal {
+        string path;            // @key
+        Header header;
+        Quality quality;
+        Value value;
+    };
+    #pragma keylist Signal path
+
+    // Batch of signals for efficient transfer
+    struct SignalBatch {
+        Header header;
+        sequence<Signal> signals;
+    };
+
+};  // module vep
+
+#endif // TEST_COMPLEX_IDL

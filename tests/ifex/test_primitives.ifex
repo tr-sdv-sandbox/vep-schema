@@ -1,0 +1,39 @@
+# Test: Primitive types
+# Tests all fundamental IFEX types map correctly to proto/IDL
+
+name: test_primitives
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    description: Test namespace for primitive types
+
+    structs:
+      - name: AllPrimitives
+        description: Struct containing all primitive types
+        members:
+          - name: val_bool
+            datatype: boolean
+          - name: val_int8
+            datatype: int8
+          - name: val_int16
+            datatype: int16
+          - name: val_int32
+            datatype: int32
+          - name: val_int64
+            datatype: int64
+          - name: val_uint8
+            datatype: uint8
+          - name: val_uint16
+            datatype: uint16
+          - name: val_uint32
+            datatype: uint32
+          - name: val_uint64
+            datatype: uint64
+          - name: val_float
+            datatype: float
+          - name: val_double
+            datatype: double
+          - name: val_string
+            datatype: string

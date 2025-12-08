@@ -1,0 +1,41 @@
+# Test: Recursive/forward reference types
+# Tests that structs with mutual references are handled correctly
+# DDS IDL requires forward declarations for this pattern
+
+name: test_recursive
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    description: Test namespace for recursive types
+
+    structs:
+      # This pattern mirrors VssStructField → VssValue → VssStructValue → VssStructField
+      # In DDS IDL, this requires forward declarations
+
+      - name: Node
+        description: A tree node that references itself via children
+        members:
+          - name: name
+            datatype: string
+          - name: value
+            datatype: int32
+          - name: children
+            datatype: Node[]
+
+      - name: FieldValue
+        description: Field that contains a Container (mutual recursion)
+        members:
+          - name: name
+            datatype: string
+          - name: container
+            datatype: Container
+
+      - name: Container
+        description: Container that holds FieldValues (mutual recursion)
+        members:
+          - name: type_name
+            datatype: string
+          - name: fields
+            datatype: FieldValue[]

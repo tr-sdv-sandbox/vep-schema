@@ -1,0 +1,132 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# AVTP - IEEE 1722 Audio/Video Transport Protocol types
+
+name: vep_avtp
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  IEEE 1722 AVTP (Audio/Video Transport Protocol) types for
+  CAN/LIN/FlexRay tunneling over Ethernet.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: AvtpAcfType
+        datatype: uint8
+        description: AVTP Control Format message type
+        options:
+          - name: ACF_TYPE_CAN
+            value: 0
+          - name: ACF_TYPE_CAN_BRIEF
+            value: 1
+          - name: ACF_TYPE_LIN
+            value: 2
+          - name: ACF_TYPE_FLEXRAY
+            value: 3
+          - name: ACF_TYPE_SENSOR
+            value: 4
+          - name: ACF_TYPE_GPC
+            value: 5
+
+    structs:
+      - name: AvtpCanFlags
+        description: CAN frame flags
+        members:
+          - name: is_extended_id
+            datatype: boolean
+            description: Extended (29-bit) vs standard (11-bit) ID
+          - name: is_fd
+            datatype: boolean
+            description: CAN-FD frame
+          - name: is_brs
+            datatype: boolean
+            description: Bit rate switch (CAN-FD)
+          - name: is_esi
+            datatype: boolean
+            description: Error state indicator (CAN-FD)
+          - name: is_rtr
+            datatype: boolean
+            description: Remote transmission request
+
+      - name: AvtpCanFrame
+        description: |
+          ACF CAN frame - CAN message encapsulated in AVTP.
+          Maps to IEEE 1722 ACF CAN PDU.
+        members:
+          - name: header
+            datatype: Header
+          - name: stream_id
+            datatype: uint64
+            description: AVTP stream identifier - topic key
+          - name: can_id
+            datatype: uint32
+            description: CAN arbitration ID - topic key
+          - name: bus_id
+            datatype: uint8
+            description: CAN bus identifier (0-31)
+          - name: flags
+            datatype: AvtpCanFlags
+          - name: payload
+            datatype: uint8[]
+            description: CAN data (up to 64 bytes for CAN-FD)
+          - name: avtp_timestamp
+            datatype: uint64
+            description: AVTP presentation timestamp
+          - name: sequence_num
+            datatype: uint32
+            description: AVTP sequence number
+
+      - name: AvtpCanBatch
+        description: Batch of CAN frames for efficiency
+        members:
+          - name: header
+            datatype: Header
+          - name: stream_id
+            datatype: uint64
+            description: AVTP stream identifier - topic key
+          - name: frames
+            datatype: AvtpCanFrame[]
+
+      - name: AvtpCanTrace
+        description: Triggered CAN trace capture for debugging
+        members:
+          - name: header
+            datatype: Header
+          - name: start_time_ns
+            datatype: int64
+          - name: end_time_ns
+            datatype: int64
+          - name: trigger_event_id
+            datatype: string
+            description: Correlation to triggering event
+          - name: frames
+            datatype: AvtpCanFrame[]
+
+      - name: AvtpStreamStats
+        description: AVTP stream statistics for monitoring
+        members:
+          - name: header
+            datatype: Header
+          - name: stream_id
+            datatype: uint64
+            description: AVTP stream identifier - topic key
+          - name: frames_received
+            datatype: uint64
+          - name: frames_sent
+            datatype: uint64
+          - name: sequence_errors
+            datatype: uint64
+          - name: timestamp_errors
+            datatype: uint64
+          - name: bytes_total
+            datatype: uint64
+          - name: average_latency_us
+            datatype: double

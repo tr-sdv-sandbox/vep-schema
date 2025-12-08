@@ -1,0 +1,101 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# OpenTelemetry Metrics - Prometheus-style metrics
+
+name: vep_otel_metrics
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  OpenTelemetry/Prometheus-style metrics for application and system
+  observability. Ingested via the OTEL probe from OTLP gRPC.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    structs:
+      - name: OtelCounter
+        description: |
+          Cumulative metric that only increases (or resets to zero).
+          Use for request counts, bytes processed, errors.
+        members:
+          - name: name
+            datatype: string
+            description: Metric name (e.g., "requests_total") - topic key
+          - name: header
+            datatype: Header
+          - name: labels
+            datatype: KeyValue[]
+          - name: value
+            datatype: double
+
+      - name: OtelGauge
+        description: |
+          Metric that can increase or decrease. Use for temperatures,
+          memory usage, queue depths.
+        members:
+          - name: name
+            datatype: string
+            description: Metric name - topic key
+          - name: header
+            datatype: Header
+          - name: labels
+            datatype: KeyValue[]
+          - name: value
+            datatype: double
+
+      - name: OtelHistogramBucket
+        description: Single histogram bucket
+        members:
+          - name: upper_bound
+            datatype: double
+          - name: cumulative_count
+            datatype: uint64
+
+      - name: OtelHistogram
+        description: Distribution of observations in buckets
+        members:
+          - name: name
+            datatype: string
+            description: Metric name - topic key
+          - name: header
+            datatype: Header
+          - name: labels
+            datatype: KeyValue[]
+          - name: sample_count
+            datatype: uint64
+          - name: sample_sum
+            datatype: double
+          - name: buckets
+            datatype: OtelHistogramBucket[]
+
+      - name: OtelSummaryQuantile
+        description: Single quantile value
+        members:
+          - name: quantile
+            datatype: double
+            description: Quantile (0.0 to 1.0)
+          - name: value
+            datatype: double
+
+      - name: OtelSummary
+        description: Pre-calculated quantiles over a sliding time window
+        members:
+          - name: name
+            datatype: string
+            description: Metric name - topic key
+          - name: header
+            datatype: Header
+          - name: labels
+            datatype: KeyValue[]
+          - name: sample_count
+            datatype: uint64
+          - name: sample_sum
+            datatype: double
+          - name: quantiles
+            datatype: OtelSummaryQuantile[]

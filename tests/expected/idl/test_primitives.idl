@@ -1,0 +1,26 @@
+// Generated from test_primitives.ifex
+
+#ifndef TEST_PRIMITIVES_IDL
+#define TEST_PRIMITIVES_IDL
+
+module test {
+
+    // Struct containing all primitive types
+    struct AllPrimitives {
+        boolean val_bool;
+        octet val_int8;
+        short val_int16;
+        long val_int32;
+        long long val_int64;
+        octet val_uint8;
+        unsigned short val_uint16;
+        unsigned long val_uint32;
+        unsigned long long val_uint64;
+        float val_float;
+        double val_double;
+        string val_string;
+    };
+
+};  // module test
+
+#endif // TEST_PRIMITIVES_IDL

@@ -1,0 +1,73 @@
+// Generated from vep_avtp.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_avtp;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// AVTP Control Format message type
+enum AvtpAcfType {
+  ACF_TYPE_CAN = 0;
+  ACF_TYPE_CAN_BRIEF = 1;
+  ACF_TYPE_LIN = 2;
+  ACF_TYPE_FLEXRAY = 3;
+  ACF_TYPE_SENSOR = 4;
+  ACF_TYPE_GPC = 5;
+}
+
+// CAN frame flags
+message AvtpCanFlags {
+  bool is_extended_id = 1;
+  bool is_fd = 2;
+  bool is_brs = 3;
+  bool is_esi = 4;
+  bool is_rtr = 5;
+}
+
+// ACF CAN frame - CAN message encapsulated in AVTP.
+Maps to IEEE 1722 ACF CAN PDU.
+
+message AvtpCanFrame {
+  Header header = 1;
+  uint64 stream_id = 2;
+  uint32 can_id = 3;
+  uint32 bus_id = 4;
+  AvtpCanFlags flags = 5;
+  repeated uint32 payload = 6;
+  uint64 avtp_timestamp = 7;
+  uint32 sequence_num = 8;
+}
+
+// Batch of CAN frames for efficiency
+message AvtpCanBatch {
+  Header header = 1;
+  uint64 stream_id = 2;
+  repeated AvtpCanFrame frames = 3;
+}
+
+// Triggered CAN trace capture for debugging
+message AvtpCanTrace {
+  Header header = 1;
+  sint64 start_time_ns = 2;
+  sint64 end_time_ns = 3;
+  string trigger_event_id = 4;
+  repeated AvtpCanFrame frames = 5;
+}
+
+// AVTP stream statistics for monitoring
+message AvtpStreamStats {
+  Header header = 1;
+  uint64 stream_id = 2;
+  uint64 frames_received = 3;
+  uint64 frames_sent = 4;
+  uint64 sequence_errors = 5;
+  uint64 timestamp_errors = 6;
+  uint64 bytes_total = 7;
+  double average_latency_us = 8;
+}
+
+

@@ -1,0 +1,42 @@
+// Generated from vep_events.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
+
+#ifndef VEP_EVENTS_IDL
+#define VEP_EVENTS_IDL
+
+
+
+
+
+
+module vep {
+    // Vehicle Edge Platform dataplane types
+
+
+    // Event severity level
+    enum Severity {
+        SEVERITY_INFO,    // = 0
+        SEVERITY_WARNING,    // = 1
+        SEVERITY_ERROR,    // = 2
+        SEVERITY_CRITICAL    // = 3
+    };
+
+    // Vehicle event with optional signal context. The event_id
+serves as the topic key.
+
+Categories: ADAS, POWERTRAIN, CHASSIS, BODY, INFOTAINMENT
+Event types: harsh_brake, dtc, door_open, collision_warning
+
+    struct Event {
+        string event_id;
+        Header header;
+        string category;
+        string event_type;
+        Severity severity;
+        sequence<KeyValue> attributes;
+        sequence<VssSignal> context;
+    };
+
+};  // module vep
+
+#endif // VEP_EVENTS_IDL

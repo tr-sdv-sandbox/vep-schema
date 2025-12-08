@@ -1,0 +1,39 @@
+# Test: Array types
+# Tests that arrays of all types generate correctly
+
+name: test_arrays
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    description: Test namespace for array types
+
+    structs:
+      - name: AllArrays
+        description: Struct containing arrays of all primitive types
+        members:
+          - name: arr_bool
+            datatype: boolean[]
+          - name: arr_int8
+            datatype: int8[]
+          - name: arr_int16
+            datatype: int16[]
+          - name: arr_int32
+            datatype: int32[]
+          - name: arr_int64
+            datatype: int64[]
+          - name: arr_uint8
+            datatype: uint8[]
+          - name: arr_uint16
+            datatype: uint16[]
+          - name: arr_uint32
+            datatype: uint32[]
+          - name: arr_uint64
+            datatype: uint64[]
+          - name: arr_float
+            datatype: float[]
+          - name: arr_double
+            datatype: double[]
+          - name: arr_string
+            datatype: string[]

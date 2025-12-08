@@ -1,0 +1,63 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# Opaque - Raw data captures (memory dumps, debug data)
+
+name: vep_opaque
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  Opaque data types for raw captures. Used for development/debug
+  scenarios like ECU memory dumps, real-time partition state, and
+  other unstructured binary data.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    structs:
+      - name: MemoryDump
+        description: |
+          Raw memory dump from an ECU or real-time partition.
+        members:
+          - name: header
+            datatype: Header
+          - name: ecu_id
+            datatype: string
+            description: Source ECU identifier
+          - name: region_name
+            datatype: string
+            description: Memory region identifier (e.g., "rt_heap", "stack")
+          - name: base_address
+            datatype: uint64
+            description: Start address of dump
+          - name: data
+            datatype: uint8[]
+            description: Raw memory contents
+          - name: metadata
+            datatype: KeyValue[]
+            description: Additional context (e.g., "trigger", "build_id")
+
+      - name: OpaqueCapture
+        description: |
+          Generic opaque capture for arbitrary binary data.
+        members:
+          - name: header
+            datatype: Header
+          - name: capture_type
+            datatype: string
+            description: Type identifier for the payload format
+          - name: source_id
+            datatype: string
+            description: Source component or ECU
+          - name: trigger_event_id
+            datatype: string
+            description: Correlation to triggering event (optional)
+          - name: payload
+            datatype: uint8[]
+          - name: metadata
+            datatype: KeyValue[]

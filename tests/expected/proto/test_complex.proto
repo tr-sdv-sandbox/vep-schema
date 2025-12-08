@@ -1,0 +1,71 @@
+// Generated from test_complex.ifex
+syntax = "proto3";
+
+package vep.vep;
+
+// Signal quality indicator
+enum Quality {
+  QUALITY_UNKNOWN = 0;
+  QUALITY_VALID = 1;
+  QUALITY_INVALID = 2;
+  QUALITY_NOT_AVAILABLE = 3;
+}
+
+// Type discriminator for Value
+enum ValueType {
+  VALUE_TYPE_EMPTY = 0;
+  VALUE_TYPE_BOOL = 1;
+  VALUE_TYPE_INT32 = 2;
+  VALUE_TYPE_INT64 = 3;
+  VALUE_TYPE_FLOAT = 4;
+  VALUE_TYPE_DOUBLE = 5;
+  VALUE_TYPE_STRING = 6;
+  // Gap preserved: 7-19 unused
+  VALUE_TYPE_BOOL_ARRAY = 20;
+  VALUE_TYPE_INT32_ARRAY = 21;
+  VALUE_TYPE_FLOAT_ARRAY = 22;
+  VALUE_TYPE_STRING_ARRAY = 23;
+}
+
+// Common message header
+message Header {
+  string source_id = 1;
+  sint64 timestamp_ns = 2;
+  uint32 seq_num = 3;
+  string correlation_id = 4;
+}
+
+// Generic key-value pair
+message KeyValue {
+  string key = 1;
+  string value = 2;
+}
+
+// Tagged union for VSS values
+message Value {
+  ValueType type = 1;
+  bool bool_value = 2;
+  sint32 int32_value = 3;
+  sint64 int64_value = 4;
+  float float_value = 5;
+  double double_value = 6;
+  string string_value = 7;
+  repeated bool bool_array = 8;
+  repeated sint32 int32_array = 9;
+  repeated float float_array = 10;
+  repeated string string_array = 11;
+}
+
+// VSS signal with path, value, quality
+message Signal {
+  string path = 1;
+  Header header = 2;
+  Quality quality = 3;
+  Value value = 4;
+}
+
+// Batch of signals for efficient transfer
+message SignalBatch {
+  Header header = 1;
+  repeated Signal signals = 2;
+}

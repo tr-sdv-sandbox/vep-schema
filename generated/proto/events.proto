@@ -1,0 +1,36 @@
+// Generated from vep_events.ifex by vep-schema
+// DO NOT EDIT - regenerate with: ./tools/run.sh generate-proto
+syntax = "proto3";
+
+
+
+package vep.vep_events;
+
+// Namespace: vep
+// Vehicle Edge Platform dataplane types
+
+// Event severity level
+enum Severity {
+  SEVERITY_INFO = 0;
+  SEVERITY_WARNING = 1;
+  SEVERITY_ERROR = 2;
+  SEVERITY_CRITICAL = 3;
+}
+
+// Vehicle event with optional signal context. The event_id
+serves as the topic key.
+
+Categories: ADAS, POWERTRAIN, CHASSIS, BODY, INFOTAINMENT
+Event types: harsh_brake, dtc, door_open, collision_warning
+
+message Event {
+  string event_id = 1;
+  Header header = 2;
+  string category = 3;
+  string event_type = 4;
+  Severity severity = 5;
+  repeated KeyValue attributes = 6;
+  repeated VssSignal context = 7;
+}
+
+

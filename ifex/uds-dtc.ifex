@@ -1,0 +1,122 @@
+# Copyright 2025 Vehicle Edge Platform Contributors
+# SPDX-License-Identifier: Apache-2.0
+#
+# UDS DTC - ISO 14229 Diagnostic Trouble Codes
+
+name: vep_uds_dtc
+major_version: 1
+minor_version: 0
+
+includes:
+  - file: types.ifex
+
+description: |
+  UDS (ISO 14229) Diagnostic Trouble Code types. Represents DTCs,
+  status information, and freeze frame snapshots from ECU diagnostics.
+
+namespaces:
+  - name: vep
+    description: Vehicle Edge Platform dataplane types
+
+    enumerations:
+      - name: UdsDtcStatus
+        datatype: uint8
+        description: |
+          UDS DTC status bits (ISO 14229-1). Can be combined as flags.
+        options:
+          - name: DTC_STATUS_TEST_FAILED
+            value: 0x01
+            description: Test failed at time of request
+          - name: DTC_STATUS_TEST_FAILED_THIS_CYCLE
+            value: 0x02
+            description: Test failed this operation cycle
+          - name: DTC_STATUS_PENDING
+            value: 0x04
+            description: Pending DTC
+          - name: DTC_STATUS_CONFIRMED
+            value: 0x08
+            description: Confirmed DTC
+          - name: DTC_STATUS_TEST_NOT_COMPLETED_SINCE_CLEAR
+            value: 0x10
+            description: Test not completed since last clear
+          - name: DTC_STATUS_TEST_FAILED_SINCE_CLEAR
+            value: 0x20
+            description: Test failed since last clear
+          - name: DTC_STATUS_TEST_NOT_COMPLETED_THIS_CYCLE
+            value: 0x40
+            description: Test not completed this operation cycle
+          - name: DTC_STATUS_WARNING_INDICATOR
+            value: 0x80
+            description: Warning indicator requested
+
+      - name: UdsDtcSeverity
+        datatype: uint8
+        description: UDS DTC severity (ISO 14229-1)
+        options:
+          - name: DTC_SEVERITY_NO_SEVERITY
+            value: 0x00
+          - name: DTC_SEVERITY_MAINTENANCE_ONLY
+            value: 0x20
+          - name: DTC_SEVERITY_CHECK_AT_NEXT_HALT
+            value: 0x40
+          - name: DTC_SEVERITY_CHECK_IMMEDIATELY
+            value: 0x80
+
+    structs:
+      - name: UdsDid
+        description: |
+          UDS Data Identifier value. Raw DID with data bytes.
+        members:
+          - name: did_id
+            datatype: uint16
+            description: Data Identifier (e.g., 0xF190 for VIN)
+          - name: data
+            datatype: uint8[]
+            description: Raw DID value bytes
+
+      - name: UdsSnapshot
+        description: |
+          UDS freeze frame / snapshot record associated with a DTC.
+        members:
+          - name: record_number
+            datatype: uint8
+            description: Snapshot record number
+          - name: dids
+            datatype: UdsDid[]
+            description: Captured DID values
+
+      - name: UdsDtc
+        description: |
+          UDS Diagnostic Trouble Code with status and metadata.
+        members:
+          - name: header
+            datatype: Header
+          - name: ecu_id
+            datatype: string
+            description: ECU identifier (source address or name)
+          - name: dtc_number
+            datatype: uint32
+            description: 3-byte DTC number (high byte is fault type)
+          - name: status_mask
+            datatype: uint8
+            description: DTC status bits (see UdsDtcStatus)
+          - name: severity
+            datatype: UdsDtcSeverity
+          - name: occurrence_count
+            datatype: uint8
+          - name: aging_count
+            datatype: uint8
+          - name: snapshots
+            datatype: UdsSnapshot[]
+            description: Associated freeze frame records
+
+      - name: UdsDtcBatch
+        description: |
+          Batch of DTCs from a single ECU or scan.
+        members:
+          - name: header
+            datatype: Header
+          - name: ecu_id
+            datatype: string
+          - name: dtcs
+            datatype: UdsDtc[]

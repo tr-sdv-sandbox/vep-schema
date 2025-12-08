@@ -1,0 +1,29 @@
+# Test: Nested structs
+# Tests that structs can reference other structs
+
+name: test_nested_structs
+major_version: 1
+minor_version: 0
+
+namespaces:
+  - name: test
+    description: Test namespace for nested struct types
+
+    structs:
+      - name: Inner
+        description: Inner struct to be nested
+        members:
+          - name: x
+            datatype: int32
+          - name: y
+            datatype: int32
+
+      - name: Outer
+        description: Outer struct containing Inner
+        members:
+          - name: id
+            datatype: string
+          - name: position
+            datatype: Inner
+          - name: positions
+            datatype: Inner[]
