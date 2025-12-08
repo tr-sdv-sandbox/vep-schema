@@ -4,6 +4,10 @@
 #ifndef VEP_VSS_SIGNAL_IDL
 #define VEP_VSS_SIGNAL_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -11,9 +15,6 @@
 
 module vep {
     // Vehicle Edge Platform dataplane types
-
-    // Forward declarations
-    struct VssValue;
 
 
     // VSS signal quality indicator
@@ -25,7 +26,6 @@ module vep {
     };
 
     // Discriminator for VssValue. Indicates which field contains data.
-
     @bit_bound(8)
     enum VssValueType {
         @value(0) VSS_VALUE_TYPE_EMPTY,
@@ -57,25 +57,46 @@ module vep {
         @value(41) VSS_VALUE_TYPE_STRUCT_ARRAY
     };
 
-    // A named field within a VSS struct. The value can be any VssValue
-including nested structs (recursive).
-
+    // A named field within a VSS struct. Contains its own type discriminator
+    // and primitive fields. Nested structs use bytes_value with serialization.
+    // (DDS IDL limitation: no recursive struct references)
     struct VssStructField {
         string name;
-        VssValue value;
+        VssValueType type;
+        boolean bool_value;
+        octet int8_value;
+        short int16_value;
+        long int32_value;
+        long long int64_value;
+        octet uint8_value;
+        unsigned short uint16_value;
+        unsigned long uint32_value;
+        unsigned long long uint64_value;
+        float float_value;
+        double double_value;
+        string string_value;
+        sequence<boolean> bool_array;
+        sequence<octet> int8_array;
+        sequence<short> int16_array;
+        sequence<long> int32_array;
+        sequence<long long> int64_array;
+        sequence<octet> uint8_array;
+        sequence<unsigned short> uint16_array;
+        sequence<unsigned long> uint32_array;
+        sequence<unsigned long long> uint64_array;
+        sequence<float> float_array;
+        sequence<double> double_array;
+        sequence<string> string_array;
     };
 
     // VSS struct type value (VSS 4.0+). A named collection of fields.
-Fields can contain nested VssStructValue via VssValue.
-
     struct VssStructValue {
         string type_name;
         sequence<VssStructField> fields;
     };
 
     // VSS value container. Only the field matching 'type' is valid.
-Supports primitives, arrays, and nested structs (recursive).
-
+    // Supports primitives, arrays, and nested structs (recursive).
     struct VssValue {
         VssValueType type;
         boolean bool_value;
@@ -107,13 +128,12 @@ Supports primitives, arrays, and nested structs (recursive).
     };
 
     // VSS signal with path, value, and quality. The path field serves
-as the topic key for filtering.
-
-Example paths:
-  - Vehicle.Speed
-  - Vehicle.Powertrain.TractionBattery.StateOfCharge.Current
-  - Vehicle.Cabin.Infotainment.Navigation.DestinationSet.Latitude
-
+    // as the topic key for filtering.
+    // 
+    // Example paths:
+    //   - Vehicle.Speed
+    //   - Vehicle.Powertrain.TractionBattery.StateOfCharge.Current
+    //   - Vehicle.Cabin.Infotainment.Navigation.DestinationSet.Latitude
     struct VssSignal {
         string path;
         Header header;
@@ -123,7 +143,6 @@ Example paths:
     #pragma keylist VssSignal path
 
     // Groups multiple VSS signals for efficient bulk transfer.
-
     struct VssSignalBatch {
         Header header;
         sequence<VssSignal> signals;

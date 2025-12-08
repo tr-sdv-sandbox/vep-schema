@@ -4,6 +4,10 @@
 #ifndef VEP_UDS_DTC_IDL
 #define VEP_UDS_DTC_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -14,7 +18,6 @@ module vep {
 
 
     // UDS DTC status bits (ISO 14229-1). Can be combined as flags.
-
     @bit_bound(8)
     enum UdsDtcStatus {
         @value(1) DTC_STATUS_TEST_FAILED,
@@ -37,21 +40,18 @@ module vep {
     };
 
     // UDS Data Identifier value. Raw DID with data bytes.
-
     struct UdsDid {
         unsigned short did_id;
         sequence<octet> data;
     };
 
     // UDS freeze frame / snapshot record associated with a DTC.
-
     struct UdsSnapshot {
         octet record_number;
         sequence<UdsDid> dids;
     };
 
     // UDS Diagnostic Trouble Code with status and metadata.
-
     struct UdsDtc {
         Header header;
         string ecu_id;
@@ -64,7 +64,6 @@ module vep {
     };
 
     // Batch of DTCs from a single ECU or scan.
-
     struct UdsDtcBatch {
         Header header;
         string ecu_id;

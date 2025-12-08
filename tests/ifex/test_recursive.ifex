@@ -1,6 +1,9 @@
-# Test: Recursive/forward reference types
-# Tests that structs with mutual references are handled correctly
-# DDS IDL requires forward declarations for this pattern
+# Test: Recursive struct flattening for DDS IDL
+# DDS IDL cannot handle true recursive types (idlc fails with "Type id not found")
+# The template should flatten recursive struct references by inlining primitive fields
+#
+# Pattern: FieldValue → Container → FieldValue[] (mutual recursion)
+# DDS solution: FieldValue gets its own type/primitive fields instead of Container reference
 
 name: test_recursive
 major_version: 1
@@ -10,28 +13,38 @@ namespaces:
   - name: test
     description: Test namespace for recursive types
 
+    enumerations:
+      - name: ValueType
+        datatype: uint8
+        description: Type discriminator for FieldValue
+        options:
+          - name: VALUE_TYPE_STRING
+            value: 1
+          - name: VALUE_TYPE_INT32
+            value: 2
+          - name: VALUE_TYPE_CONTAINER
+            value: 10
+
     structs:
-      # This pattern mirrors VssStructField → VssValue → VssStructValue → VssStructField
-      # In DDS IDL, this requires forward declarations
-
-      - name: Node
-        description: A tree node that references itself via children
-        members:
-          - name: name
-            datatype: string
-          - name: value
-            datatype: int32
-          - name: children
-            datatype: Node[]
-
+      # FieldValue references Container - this creates mutual recursion
+      # DDS IDL template should flatten this by NOT including Container reference
+      # Instead, FieldValue should have its own inline primitive fields
       - name: FieldValue
-        description: Field that contains a Container (mutual recursion)
+        description: Field that contains a Container (mutual recursion - flatten for DDS)
         members:
           - name: name
             datatype: string
+          - name: value_type
+            datatype: ValueType
+          - name: string_value
+            datatype: string
+          - name: int32_value
+            datatype: int32
+          # Recursive reference - should be removed/flattened in DDS IDL
           - name: container
             datatype: Container
 
+      # Container references FieldValue[] - completes the cycle
       - name: Container
         description: Container that holds FieldValues (mutual recursion)
         members:
@@ -39,3 +52,12 @@ namespaces:
             datatype: string
           - name: fields
             datatype: FieldValue[]
+
+      # Top-level struct using Container (not recursive itself)
+      - name: Message
+        description: A message with container data
+        members:
+          - name: id
+            datatype: string
+          - name: data
+            datatype: Container

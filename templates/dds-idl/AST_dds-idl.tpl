@@ -11,6 +11,10 @@
 {#   string → string #}
 {#   T[] → sequence<T> #}
 {# #}
+{# DDS IDL Limitations: #}
+{#   - No true recursive types (idlc fails with "Type id not found") #}
+{#   - Solution: Detect cycles and skip recursive struct members #}
+{# #}
 {# (C) 2025 VEP Contributors - Apache 2.0 #}
 // Generated from {{ item.name }}.ifex by vep-schema
 // DO NOT EDIT - regenerate with: ./tools/run.sh generate-idl
@@ -19,6 +23,14 @@
 #ifndef {{ filename_upper }}_IDL
 #define {{ filename_upper }}_IDL
 
+{# Generate #include directives for IFEX includes #}
+{% if item.includes %}
+{% for inc in item.includes %}
+{% set inc_name = inc.file|replace(".ifex", ".idl") %}
+#include "{{ inc_name }}"
+{% endfor %}
+
+{% endif %}
 {# Type mappings: IFEX → DDS IDL #}
 {% set typedefs = dict() %}
 {% set x=typedefs.__setitem__("int8", "octet") %}
@@ -78,6 +90,59 @@ sequence<{{ mapped }}>
 {% set _ = struct_names.append(s.name) %}
 {% endfor %}
 
+{# Build dependency graph: struct_deps[A] = [B, C] means A references B and C #}
+{% set struct_deps = dict() %}
+{% for s in n.structs %}
+{% set deps = [] %}
+{% for m in s.members %}
+{% set member_base = base_type(m.datatype)|trim %}
+{% if member_base in struct_names and member_base != s.name %}
+{% if member_base not in deps %}
+{% set _ = deps.append(member_base) %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% set _ = struct_deps.__setitem__(s.name, deps) %}
+{% endfor %}
+
+{# Detect cycles: A struct member creates a cycle if: #}
+{#   - A references B, and B (directly or indirectly) references A #}
+{# To break cycles, we only skip members in the FIRST struct of the cycle #}
+{# (determined by definition order in IFEX). This keeps one direction working. #}
+{% set recursive_members = dict() %}
+{% set processed_cycles = [] %}
+{% for s in n.structs %}
+{% set skip_members = [] %}
+{% for m in s.members %}
+{% set member_base = base_type(m.datatype)|trim %}
+{% if member_base in struct_names and member_base != s.name %}
+{# Check if member_base depends on s.name (would create cycle) #}
+{% set ns_cycle = namespace(found=false) %}
+{# Simple check: does member_base directly depend on s.name? #}
+{% if s.name in struct_deps.get(member_base, []) %}
+{% set ns_cycle.found = true %}
+{% else %}
+{# Deeper check: does any dependency of member_base depend on s.name? #}
+{% for dep in struct_deps.get(member_base, []) %}
+{% if s.name in struct_deps.get(dep, []) %}
+{% set ns_cycle.found = true %}
+{% endif %}
+{% endfor %}
+{% endif %}
+{% if ns_cycle.found %}
+{# Only skip if this cycle hasn't been broken elsewhere already #}
+{# Create a cycle key (sorted pair) to track which cycles we've handled #}
+{% set cycle_key = [s.name, member_base]|sort|join('_') %}
+{% if cycle_key not in processed_cycles %}
+{% set _ = skip_members.append(m.name) %}
+{% set _ = processed_cycles.append(cycle_key) %}
+{% endif %}
+{% endif %}
+{% endif %}
+{% endfor %}
+{% set _ = recursive_members.__setitem__(s.name, skip_members) %}
+{% endfor %}
+
 {# Find structs that need forward declarations #}
 {# A struct needs forward decl if it's referenced before it's defined #}
 {% set forward_decls = [] %}
@@ -86,9 +151,12 @@ sequence<{{ mapped }}>
 {% for m in s.members %}
 {% set member_base = base_type(m.datatype)|trim %}
 {# If member references a struct we haven't seen yet, it needs forward decl #}
+{# But skip if this member will be removed due to recursion #}
 {% if member_base in struct_names and member_base not in seen_structs and member_base != s.name %}
+{% if m.name not in recursive_members.get(s.name, []) %}
 {% if member_base not in forward_decls %}
 {% set _ = forward_decls.append(member_base) %}
+{% endif %}
 {% endif %}
 {% endif %}
 {% endfor %}
@@ -120,7 +188,13 @@ module {{ n.name }} {
 
 {# Generate enums #}
 {% for e in n.enumerations %}
-    // {{ e.description|default("Enumeration " + e.name, true) }}
+{% if e.description %}
+{% for line in e.description.strip().split('\n') %}
+    // {{ line }}
+{% endfor %}
+{% else %}
+    // Enumeration {{ e.name }}
+{% endif %}
 {# Check if enum is sparse (has gaps in values) #}
 {% set ns = namespace(sparse=false) %}
 {% for opt in e.options %}
@@ -147,10 +221,20 @@ module {{ n.name }} {
 {% endfor %}
 {# Generate structs #}
 {% for s in n.structs %}
-    // {{ s.description|default("Struct " + s.name, true) }}
+{% if s.description %}
+{% for line in s.description.strip().split('\n') %}
+    // {{ line }}
+{% endfor %}
+{% endif %}
+{% set skip_list = recursive_members.get(s.name, []) %}
+{% if skip_list %}
+    // Note: Recursive member(s) removed to break cycle: {{ skip_list|join(', ') }}
+{% endif %}
     struct {{ s.name }} {
 {% for m in s.members %}
+{% if m.name not in skip_list %}
         {{ convert_type(m.datatype) }} {{ m.name }};
+{% endif %}
 {% endfor %}
     };
 {% if s.members|selectattr("name", "equalto", "path")|list %}

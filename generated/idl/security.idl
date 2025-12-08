@@ -4,6 +4,10 @@
 #ifndef VEP_SECURITY_IDL
 #define VEP_SECURITY_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -22,8 +26,7 @@ module vep {
     };
 
     // Security incident for VSOC alerting. Contains threat
-indicators and evidence.
-
+    // indicators and evidence.
     struct SecurityIncident {
         string incident_id;
         Header header;

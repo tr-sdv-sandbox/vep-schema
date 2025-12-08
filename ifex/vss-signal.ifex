@@ -108,26 +108,76 @@ namespaces:
             value: 41
 
     structs:
-      # Forward reference note: VssStructValue and VssValue are mutually recursive.
-      # VssValue.struct_value → VssStructValue
-      # VssStructValue.fields[].value → VssValue
+      # Note: Original design was recursive (VssValue → VssStructValue → VssStructField → VssValue)
+      # but DDS IDL cannot handle recursive types. Instead, VssStructField is self-contained
+      # with its own primitive fields, avoiding the need to reference VssValue.
 
       - name: VssStructField
         description: |
-          A named field within a VSS struct. The value can be any VssValue
-          including nested structs (recursive).
+          A named field within a VSS struct. Contains its own type discriminator
+          and primitive fields. Nested structs use bytes_value with serialization.
+          (DDS IDL limitation: no recursive struct references)
         members:
           - name: name
             datatype: string
             description: Field name (e.g., "latitude", "address")
-          - name: value
-            datatype: VssValue
-            description: Field value (can be primitive, array, or nested struct)
+          - name: type
+            datatype: VssValueType
+            description: Type discriminator for which field is valid
+          # Primitive values
+          - name: bool_value
+            datatype: boolean
+          - name: int8_value
+            datatype: int8
+          - name: int16_value
+            datatype: int16
+          - name: int32_value
+            datatype: int32
+          - name: int64_value
+            datatype: int64
+          - name: uint8_value
+            datatype: uint8
+          - name: uint16_value
+            datatype: uint16
+          - name: uint32_value
+            datatype: uint32
+          - name: uint64_value
+            datatype: uint64
+          - name: float_value
+            datatype: float
+          - name: double_value
+            datatype: double
+          - name: string_value
+            datatype: string
+          # Array values
+          - name: bool_array
+            datatype: boolean[]
+          - name: int8_array
+            datatype: int8[]
+          - name: int16_array
+            datatype: int16[]
+          - name: int32_array
+            datatype: int32[]
+          - name: int64_array
+            datatype: int64[]
+          - name: uint8_array
+            datatype: uint8[]
+          - name: uint16_array
+            datatype: uint16[]
+          - name: uint32_array
+            datatype: uint32[]
+          - name: uint64_array
+            datatype: uint64[]
+          - name: float_array
+            datatype: float[]
+          - name: double_array
+            datatype: double[]
+          - name: string_array
+            datatype: string[]
 
       - name: VssStructValue
         description: |
           VSS struct type value (VSS 4.0+). A named collection of fields.
-          Fields can contain nested VssStructValue via VssValue.
         members:
           - name: type_name
             datatype: string

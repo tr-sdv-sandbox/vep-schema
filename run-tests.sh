@@ -311,13 +311,47 @@ if 'namespaces' not in data:
                 fi
             fi
 
-            # Test 6: Forward declarations for recursive types
-            # Container is referenced by FieldValue before Container is defined
+            # Test 6: Recursive struct flattening
+            # DDS IDL cannot handle true recursive types - must flatten by removing
+            # the recursive member (container field in FieldValue)
             if grep -q "test_recursive" <<< "$name" 2>/dev/null; then
-                if grep -q "^[[:space:]]*struct Container;" "$output" 2>/dev/null; then
-                    report_pass "$name: forward declarations present"
+                # FieldValue should NOT have a "Container container" member (recursion broken)
+                # Extract just the FieldValue struct body (between { and };)
+                if sed -n '/struct FieldValue/,/};/p' "$output" 2>/dev/null | grep -q "Container container"; then
+                    report_fail "$name: recursive struct flattening" "FieldValue still contains Container reference (recursion not broken)"
                 else
-                    report_fail "$name: forward declarations" "Missing forward declaration for Container"
+                    # Container should still reference FieldValue (one direction is OK)
+                    if sed -n '/struct Container/,/};/p' "$output" 2>/dev/null | grep -q "sequence<FieldValue>"; then
+                        report_pass "$name: recursive struct flattened correctly"
+                    else
+                        report_fail "$name: recursive struct flattening" "Container should still reference FieldValue"
+                    fi
+                fi
+            fi
+
+            # Test 7: Multi-line descriptions properly commented
+            # Each line of a multi-line description should be a separate // comment
+            if grep -q "test_multiline" <<< "$name" 2>/dev/null; then
+                # Check that multi-line descriptions don't have bare text (syntax error)
+                # A bare word like "timestamps" on its own line indicates broken comment
+                if grep -E "^[[:space:]]+[a-z]+[,.]?$" "$output" 2>/dev/null | grep -v "^[[:space:]]*//" >/dev/null 2>&1; then
+                    report_fail "$name: multi-line comments" "Found uncommented text (broken multi-line description)"
+                else
+                    # Check that we have multiple consecutive comment lines
+                    if grep -A1 "^[[:space:]]*// " "$output" 2>/dev/null | grep -q "^[[:space:]]*// "; then
+                        report_pass "$name: multi-line comments handled"
+                    else
+                        report_fail "$name: multi-line comments" "Multi-line descriptions not converted to multiple comment lines"
+                    fi
+                fi
+            fi
+
+            # Test 8: IFEX includes → IDL #include directives
+            if grep -q "test_includes" <<< "$name" 2>/dev/null; then
+                if grep -q '#include "test_primitives.idl"' "$output" 2>/dev/null; then
+                    report_pass "$name: #include directive generated"
+                else
+                    report_fail "$name: #include directive" "Missing #include for dependency"
                 fi
             fi
         done

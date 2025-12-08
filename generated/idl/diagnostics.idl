@@ -4,6 +4,10 @@
 #ifndef VEP_DIAGNOSTICS_IDL
 #define VEP_DIAGNOSTICS_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -20,8 +24,7 @@ module vep {
     };
 
     // Single-value diagnostic measurement. The variable_id serves
-as the topic key.
-
+    // as the topic key.
     struct ScalarMeasurement {
         string variable_id;
         Header header;
@@ -31,8 +34,7 @@ as the topic key.
     };
 
     // Multi-value diagnostic measurement for histograms and
-distributions. The variable_id serves as the topic key.
-
+    // distributions. The variable_id serves as the topic key.
     struct VectorMeasurement {
         string variable_id;
         Header header;
@@ -44,7 +46,6 @@ distributions. The variable_id serves as the topic key.
     };
 
     // 2D diagnostic measurement. Values stored row-major flattened.
-
     struct MatrixMeasurement {
         string variable_id;
         Header header;

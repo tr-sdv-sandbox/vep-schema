@@ -4,6 +4,10 @@
 #ifndef VEP_OTEL_LOGS_IDL
 #define VEP_OTEL_LOGS_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -22,7 +26,6 @@ module vep {
     };
 
     // Structured log entry compatible with OpenTelemetry logs.
-
     struct OtelLogEntry {
         Header header;
         OtelLogLevel level;

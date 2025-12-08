@@ -4,6 +4,10 @@
 #ifndef VEP_OTEL_METRICS_IDL
 #define VEP_OTEL_METRICS_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -14,8 +18,7 @@ module vep {
 
 
     // Cumulative metric that only increases (or resets to zero).
-Use for request counts, bytes processed, errors.
-
+    // Use for request counts, bytes processed, errors.
     struct OtelCounter {
         string name;
         Header header;
@@ -24,8 +27,7 @@ Use for request counts, bytes processed, errors.
     };
 
     // Metric that can increase or decrease. Use for temperatures,
-memory usage, queue depths.
-
+    // memory usage, queue depths.
     struct OtelGauge {
         string name;
         Header header;

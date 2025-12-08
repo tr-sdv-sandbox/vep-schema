@@ -4,6 +4,10 @@
 #ifndef VEP_AVTP_IDL
 #define VEP_AVTP_IDL
 
+#include "types.idl"
+
+
+
 
 
 
@@ -33,8 +37,7 @@ module vep {
     };
 
     // ACF CAN frame - CAN message encapsulated in AVTP.
-Maps to IEEE 1722 ACF CAN PDU.
-
+    // Maps to IEEE 1722 ACF CAN PDU.
     struct AvtpCanFrame {
         Header header;
         unsigned long long stream_id;

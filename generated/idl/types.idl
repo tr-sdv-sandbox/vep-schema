@@ -9,13 +9,14 @@
 
 
 
+
+
 module vep {
     // Vehicle Edge Platform dataplane types
 
 
     // Common metadata for all messages. Provides origin tracking,
-timestamps, sequencing, and correlation.
-
+    // timestamps, sequencing, and correlation.
     struct Header {
         string source_id;
         long long timestamp_ns;
