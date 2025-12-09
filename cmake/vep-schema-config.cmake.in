@@ -1,0 +1,6 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+find_dependency(CycloneDDS)
+
+include("${CMAKE_CURRENT_LIST_DIR}/vep-schema-targets.cmake")
